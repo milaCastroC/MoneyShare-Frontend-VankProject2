@@ -12,19 +12,49 @@
 </header>
 
 <div class="login-container">
-    <div class="login-box">
-        <h2>INICIO DE SESIÓN</h2>
-        
-        <label for="email">Usuario</label>
-        <input type="email" id="email" placeholder="correo@example.com">
-
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" placeholder="**********">
-
-        <button class="login-button">INICIAR SESIÓN</button>
-
-        <p>¿No tienes una cuenta aún? <a routerLink="#">REGÍSTRATE AQUÍ</a></p>
-    </div>
+  <div class="login-box">
+      <h2>INICIO DE SESIÓN</h2>
+      
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+              <label for="email">Usuario</label>
+              <input 
+                  type="email" 
+                  id="email" 
+                  formControlName="email" 
+                  placeholder="correo@example.com"
+                  [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
+              >
+              <div *ngIf="submitted && f['email'].errors" class="error-message">
+                  <div *ngIf="f['email'].errors['required']">El correo electrónico es requerido</div>
+                  <div *ngIf="f['email'].errors['email'] || f['email'].errors['pattern']">
+                      Ingrese un correo electrónico válido
+                  </div>
+              </div>
+          </div>
+          
+          <div class="form-group">
+              <label for="password">Contraseña</label>
+              <input 
+                  type="password" 
+                  id="password" 
+                  formControlName="password" 
+                  placeholder="**********"
+                  [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
+              >
+              <div *ngIf="submitted && f['password'].errors" class="error-message">
+                  <div *ngIf="f['password'].errors['required']">La contraseña es requerida</div>
+                  <div *ngIf="f['password'].errors['minlength']">
+                      La contraseña debe tener al menos 8 caracteres
+                  </div>
+              </div>
+          </div>
+          
+          <button type="submit" class="login-button">INICIAR SESIÓN</button>
+      </form>
+      
+      <p>¿No tienes una cuenta aún? <a routerLink="/register">REGÍSTRATE AQUÍ</a></p>
+  </div>
 </div>
 
 <footer>
