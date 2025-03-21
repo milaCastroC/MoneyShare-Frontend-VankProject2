@@ -1,1 +1,129 @@
-<p>register works!</p>
+<!-- register.component.html -->
+    <header>
+        <a routerLink="">
+            <img src="/assets/imagenes/Logo.png" alt="Logo" />
+        </a>
+        <div>
+          <a routerLink="/login">
+            <button> Iniciar Sesión</button>
+          </a>                
+          
+        </div>
+    </header>
+  
+    <div class="register-box">
+      <h2>REGISTRO</h2>
+      
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input 
+            type="text" 
+            id="nombre" 
+            formControlName="nombre" 
+            placeholder="Nombre Completo"
+            [ngClass]="{ 'is-invalid': submitted && f['nombre'].errors }"
+          >
+          <div *ngIf="submitted && f['nombre'].errors" class="error-message">
+            <div *ngIf="f['nombre'].errors['required']">El nombre es requerido</div>
+            <div *ngIf="f['nombre'].errors['minlength']">El nombre debe tener al menos 3 caracteres</div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="usuario">Usuario</label>
+          <input 
+            type="text" 
+            id="usuario" 
+            formControlName="usuario" 
+            placeholder="Nombre de usuario"
+            [ngClass]="{ 'is-invalid': submitted && f['usuario'].errors }"
+          >
+          <div *ngIf="submitted && f['usuario'].errors" class="error-message">
+            <div *ngIf="f['usuario'].errors['required']">El usuario es requerido</div>
+            <div *ngIf="f['usuario'].errors['minlength']">El usuario debe tener al menos 4 caracteres</div>
+            <div *ngIf="f['usuario'].errors['pattern']">El usuario solo puede contener letras, números, puntos, guiones y guiones bajos</div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="contrasena">Contraseña</label>
+          <input 
+            type="password" 
+            id="contrasena" 
+            formControlName="contrasena" 
+            placeholder="••••••••"
+            [ngClass]="{ 'is-invalid': submitted && f['contrasena'].errors }"
+          >
+          <div *ngIf="submitted && f['contrasena'].errors" class="error-message">
+            <div *ngIf="f['contrasena'].errors['required']">La contraseña es requerida</div>
+            <div *ngIf="f['contrasena'].errors['minlength']">La contraseña debe tener al menos 8 caracteres</div>
+            <div *ngIf="f['contrasena'].errors['pattern']">La contraseña debe incluir al menos una letra mayúscula, una letra minúscula y un número</div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="correo">Correo electrónico</label>
+          <input 
+            type="email" 
+            id="correo" 
+            formControlName="correo" 
+            placeholder="correo@ejemplo.com"
+            [ngClass]="{ 'is-invalid': submitted && f['correo'].errors }"
+          >
+          <div *ngIf="submitted && f['correo'].errors" class="error-message">
+            <div *ngIf="f['correo'].errors['required']">El correo electrónico es requerido</div>
+            <div *ngIf="f['correo'].errors['email'] || f['correo'].errors['pattern']">Ingrese un correo electrónico válido</div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="telefono">Teléfono de contacto</label>
+          <input 
+            type="tel" 
+            id="telefono" 
+            formControlName="telefono" 
+            placeholder="1234567890"
+            [ngClass]="{ 'is-invalid': submitted && f['telefono'].errors }"
+          >
+          <div *ngIf="submitted && f['telefono'].errors" class="error-message">
+            <div *ngIf="f['telefono'].errors['required']">El teléfono es requerido</div>
+            <div *ngIf="f['telefono'].errors['pattern']">Ingrese un número de teléfono válido de 10 dígitos</div>
+          </div>
+        </div>
+        
+        <div class="button-container">
+          <button type="submit" class="register-button">REGISTRARSE</button>
+        </div>
+      </form>
+    </div>
+    
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Comunícate con nosotros:</h3>
+          <p>sharemoney.soporte&#64;gmail.com</p>
+          <p>Teléfono: 1234567890</p>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Políticas</h3>
+          <p>Políticas de privacidad</p>
+          <p>Términos y condiciones</p>
+          <p>Soporte</p>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Síguenos</h3>
+          <div class="social-links">
+            <a href="#" class="social-link facebook">Facebook</a>
+            <a href="#" class="social-link twitter">Twitter</a>
+            <a href="#" class="social-link instagram">Instagram</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="copyright">
+        <p>© 2025 ShareMoney. Todos los derechos reservados</p>
+      </div>
+    </footer>
