@@ -279,6 +279,120 @@
     color: #666;
   }
   
+  /* Balance Styles */
+  .balances-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+  }
+  
+  .balance-title {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  .balance-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .balance-info h4 {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .balance-amount {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .action-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .pay-btn {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .pay-btn:hover {
+    background-color: #3e8e41;
+  }
+  
+  .register-btn {
+    background-color: #2196F3;
+    color: white;
+  }
+  
+  .register-btn:hover {
+    background-color: #0b7dda;
+  }
+  
+  .user-balances {
+    margin-top: 20px;
+  }
+  
+  .user-balance-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-avatar {
+    width: 30px;
+    height: 30px;
+    background-color: #d0d0d0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+  }
+  
+  .avatar-icon {
+    font-size: 16px;
+  }
+  
+  .user-name {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .user-balance {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .positive {
+    color: #4CAF50;
+  }
+  
+  .negative {
+    color: #f44336;
+  }
+  
   .empty-state {
     text-align: center;
     padding: 30px;

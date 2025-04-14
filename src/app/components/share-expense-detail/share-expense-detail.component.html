@@ -5,7 +5,7 @@
         <img src="/assets/imagenes/Logo.png" alt="MoneyShare Logo" class="logo">
       </div>
       <div class="header-title">
-        <h1>VISTA DEL SHAREEXPENSE</h1>
+        <h1>BALANCE DEL SHAREEXPENSE</h1>
       </div>
       <div class="header-right">
         <button class="header-btn">Notificaciones</button>
@@ -40,7 +40,7 @@
           
           <div class="expense-status-section">
             <h3>Estado del gasto</h3>
-            <p class="expense-amount">{{ formatCurrency(totalAmount) }}</p>
+            <p class="expense-amount">{{ formatCurrency(paidAmount) }} / {{ formatCurrency(totalAmount) }}</p>
             <div class="progress-container">
               <div class="progress-bar" [style.width.%]="calculateProgress()"></div>
             </div>
@@ -64,6 +64,7 @@
           </button>
         </div>
         
+        <!-- Contenido de la pestaña Subgastos -->
         <div class="tab-content" *ngIf="activeTab === 'subgastos'">
           <div class="subexpenses-list">
             <div class="subexpense-item" *ngFor="let subExpense of subExpenses">
@@ -85,9 +86,44 @@
           </div>
         </div>
         
+        <!-- Contenido de la pestaña Balance -->
         <div class="tab-content" *ngIf="activeTab === 'balance'">
-          <!-- Contenido de la pestaña balance -->
-          <p class="empty-state">Información de balance no disponible</p>
+          <div class="balances-container">
+            <h3 class="balance-title">Balances</h3>
+            
+            <!-- Sección de lo que debes -->
+            <div class="balance-row you-owe">
+              <div class="balance-info">
+                <h4>Debes</h4>
+                <p class="balance-amount">{{ formatCurrency(youOwe) }}</p>
+              </div>
+              <button class="action-btn pay-btn" (click)="payDebt()">Pagar</button>
+            </div>
+            
+            <!-- Sección de lo que te deben -->
+            <div class="balance-row they-owe">
+              <div class="balance-info">
+                <h4>Te deben</h4>
+                <p class="balance-amount">{{ formatCurrency(theyOweYou) }}</p>
+              </div>
+              <button class="action-btn register-btn" (click)="registerPayment()">Registrar pago</button>
+            </div>
+            
+            <!-- Lista de usuarios con sus balances -->
+            <div class="user-balances">
+              <div class="user-balance-item" *ngFor="let user of userBalances">
+                <div class="user-info">
+                  <div class="user-avatar">
+                    <span class="avatar-icon">👤</span>
+                  </div>
+                  <p class="user-name">{{ user.name }}</p>
+                </div>
+                <p class="user-balance" [ngClass]="{'positive': user.balance > 0, 'negative': user.balance < 0}">
+                  {{ user.balance > 0 ? '+' : '' }}{{ formatCurrency(user.balance) }}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
