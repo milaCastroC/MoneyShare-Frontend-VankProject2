@@ -2,14 +2,14 @@
     <div class="modal-container">
       <button class="close-btn" (click)="closeModal()">✕</button>
       
-      <h2 class="modal-title">Debes {{ formatCurrency(totalDebt) }}</h2>
+      <h2 class="modal-title">Te deben {{ formatCurrency(totalOwed) }}</h2>
       
       <div class="modal-content">
         <div class="form-group">
-          <label for="payTo">Pagar a</label>
+          <label for="paidBy">¿Quién te pagó?</label>
           <div class="select-container">
             <select 
-              id="payTo" 
+              id="paidBy" 
               class="form-control" 
               [value]="selectedUserId || ''" 
               (change)="onUserChange($event)"

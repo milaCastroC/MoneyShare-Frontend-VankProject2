@@ -2,24 +2,23 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-
 interface User {
   id: number;
   name: string;
 }
 
 @Component({
-  selector: 'app-pay-debt-modal',
+  selector: 'app-register-payment-modal',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './pay-debt-modal.component.html',
-  styleUrl: './pay-debt-modal.component.css'
+  templateUrl: './register-payment-modal.component.html',
+  styleUrls: ['./register-payment-modal.component.css']
 })
-export class PayDebtModalComponent implements OnInit {
-  @Input() totalDebt: number = 0;
+export class RegisterPaymentModalComponent implements OnInit {
+  @Input() totalOwed: number = 0;
   @Input() users: User[] = [];
   @Output() close = new EventEmitter<void>();
-  @Output() paymentConfirmed = new EventEmitter<{userId: number, amount: number}>();
+  @Output() paymentRegistered = new EventEmitter<{userId: number, amount: number}>();
   
   selectedUserId: number | null = null;
   paymentAmount: number = 0;
@@ -33,9 +32,9 @@ export class PayDebtModalComponent implements OnInit {
       this.selectedUserId = this.users[0].id;
     }
     
-    // Inicializar el monto de pago con el total de la deuda
-    this.paymentAmount = this.totalDebt;
-    this.maxAmount = this.totalDebt;
+    // Inicializar el monto de pago con el total que te deben
+    this.paymentAmount = this.totalOwed;
+    this.maxAmount = this.totalOwed;
   }
 
   formatCurrency(amount: number): string {
@@ -63,7 +62,7 @@ export class PayDebtModalComponent implements OnInit {
 
   confirmPayment(): void {
     if (this.selectedUserId !== null && this.paymentAmount > 0) {
-      this.paymentConfirmed.emit({
+      this.paymentRegistered.emit({
         userId: this.selectedUserId,
         amount: this.paymentAmount
       });

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
+import { PayDebtModalComponent } from '../pay-debt-modal/pay-debt-modal.component';
+import { RegisterPaymentModalComponent } from '../register-payment-modal/register-payment-modal.component';
 
 interface SubExpense {
   id: number;
@@ -19,9 +21,9 @@ interface UserBalance {
 @Component({
   selector: 'app-share-expense-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, PayDebtModalComponent, RegisterPaymentModalComponent],
   templateUrl: './share-expense-detail.component.html',
-  styleUrl: './share-expense-detail.component.css'
+  styleUrls: ['./share-expense-detail.component.css']
 })
 export class ShareExpenseDetailComponent implements OnInit {
   shareExpenseName: string = 'Nombre del ShareExpense';
@@ -45,6 +47,10 @@ export class ShareExpenseDetailComponent implements OnInit {
     { id: 2, name: 'Juanita', balance: -28900 },
     { id: 3, name: 'Juancho', balance: -15500 }
   ];
+
+  // Estado de los modales
+  showPayDebtModal: boolean = false;
+  showRegisterPaymentModal: boolean = false;
 
   constructor(
     private router: Router,
@@ -98,13 +104,67 @@ export class ShareExpenseDetailComponent implements OnInit {
   }
 
   payDebt(): void {
-    // Aquí se implementaría la lógica para pagar una deuda
-    console.log('Pagar deuda');
+    // Abrir el modal de pago
+    this.showPayDebtModal = true;
+  }
+
+  closePayDebtModal(): void {
+    this.showPayDebtModal = false;
+  }
+
+  handlePaymentConfirmed(paymentData: {userId: number, amount: number}): void {
+    console.log('Pago confirmado:', paymentData);
+    
+    // Aquí se implementaría la lógica para procesar el pago
+    // Por ejemplo, actualizar el balance del usuario y reducir la deuda
+    
+    // Cerrar el modal después de procesar el pago
+    this.showPayDebtModal = false;
+    
+    // Mostrar un mensaje de confirmación
+    alert(`Pago de ${this.formatCurrency(paymentData.amount)} realizado con éxito`);
+    
+    // Actualizar los datos (simulación)
+    this.youOwe -= paymentData.amount;
+    if (this.youOwe < 0) this.youOwe = 0;
+    
+    // Actualizar el balance del usuario que recibió el pago
+    const userIndex = this.userBalances.findIndex(user => user.id === paymentData.userId);
+    if (userIndex !== -1) {
+      this.userBalances[userIndex].balance += paymentData.amount;
+    }
   }
 
   registerPayment(): void {
-    // Aquí se implementaría la lógica para registrar un pago recibido
-    console.log('Registrar pago recibido');
+    // Abrir el modal de registro de pago
+    this.showRegisterPaymentModal = true;
+  }
+
+  closeRegisterPaymentModal(): void {
+    this.showRegisterPaymentModal = false;
+  }
+
+  handlePaymentRegistered(paymentData: {userId: number, amount: number}): void {
+    console.log('Pago registrado:', paymentData);
+    
+    // Aquí se implementaría la lógica para procesar el registro de pago
+    // Por ejemplo, actualizar el balance del usuario y reducir lo que te deben
+    
+    // Cerrar el modal después de procesar el registro
+    this.showRegisterPaymentModal = false;
+    
+    // Mostrar un mensaje de confirmación
+    alert(`Pago de ${this.formatCurrency(paymentData.amount)} registrado con éxito`);
+    
+    // Actualizar los datos (simulación)
+    this.theyOweYou -= paymentData.amount;
+    if (this.theyOweYou < 0) this.theyOweYou = 0;
+    
+    // Actualizar el balance del usuario que realizó el pago
+    const userIndex = this.userBalances.findIndex(user => user.id === paymentData.userId);
+    if (userIndex !== -1) {
+      this.userBalances[userIndex].balance += paymentData.amount;
+    }
   }
 
   goBack(): void {
@@ -119,5 +179,25 @@ export class ShareExpenseDetailComponent implements OnInit {
   calculateProgress(): number {
     // Calcular el porcentaje de progreso
     return (this.paidAmount / this.totalAmount) * 100;
+  }
+
+  // Obtener solo los usuarios con balance negativo (a quienes les debes)
+  getUsersYouOwe(): {id: number, name: string}[] {
+    return this.userBalances
+      .filter(user => user.balance > 0)
+      .map(user => ({
+        id: user.id,
+        name: user.name
+      }));
+  }
+
+  // Obtener solo los usuarios con balance negativo (quienes te deben)
+  getUsersWhoOweYou(): {id: number, name: string}[] {
+    return this.userBalances
+      .filter(user => user.balance < 0)
+      .map(user => ({
+        id: user.id,
+        name: user.name
+      }));
   }
 }

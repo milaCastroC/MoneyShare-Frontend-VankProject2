@@ -1,165 +1,183 @@
 <div class="share-expense-detail-container">
-    <!-- Header -->
-    <header class="app-header">
-      <div class="header-left">
-        <img src="/assets/imagenes/Logo.png" alt="MoneyShare Logo" class="logo">
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <img src="/assets/imagenes/Logo.png" alt="MoneyShare Logo" class="logo">
+    </div>
+    <div class="header-title">
+      <h1>BALANCE DEL SHAREEXPENSE</h1>
+    </div>
+    <div class="header-right">
+      <button class="header-btn">Notificaciones</button>
+      <button class="header-btn" (click)="logout()">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="detail-container">
+      <button class="back-btn" (click)="goBack()">
+        <span class="back-icon">✕</span> Volver al inicio
+      </button>
+      
+      <div class="expense-header">
+        <div class="expense-title-section">
+          <h2 class="expense-title">{{ shareExpenseName }}</h2>
+          
+          <div class="expense-code-section">
+            <div class="code-container">
+              <span>Código:</span>
+              <span class="code-value">{{ shareExpenseCode }}</span>
+              <button class="copy-btn" (click)="copyCode()">Copiar</button>
+            </div>
+            
+            <div class="avatar-container">
+              <div class="avatar"></div>
+              <div class="help-icon">?</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="expense-status-section">
+          <h3>Estado del gasto</h3>
+          <p class="expense-amount">{{ formatCurrency(paidAmount) }} / {{ formatCurrency(totalAmount) }}</p>
+          <div class="progress-container">
+            <div class="progress-bar" [style.width.%]="calculateProgress()"></div>
+          </div>
+        </div>
       </div>
-      <div class="header-title">
-        <h1>BALANCE DEL SHAREEXPENSE</h1>
-      </div>
-      <div class="header-right">
-        <button class="header-btn">Notificaciones</button>
-        <button class="header-btn" (click)="logout()">Cerrar sesión</button>
-      </div>
-    </header>
-  
-    <!-- Main Content -->
-    <div class="main-content">
-      <div class="detail-container">
-        <button class="back-btn" (click)="goBack()">
-          <span class="back-icon">✕</span> Volver al inicio
+      
+      <div class="tabs-container">
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'subgastos'" 
+          (click)="setActiveTab('subgastos')"
+        >
+          Subgastos
         </button>
-        
-        <div class="expense-header">
-          <div class="expense-title-section">
-            <h2 class="expense-title">{{ shareExpenseName }}</h2>
-            
-            <div class="expense-code-section">
-              <div class="code-container">
-                <span>Código:</span>
-                <span class="code-value">{{ shareExpenseCode }}</span>
-                <button class="copy-btn" (click)="copyCode()">Copiar</button>
-              </div>
-              
-              <div class="avatar-container">
-                <div class="avatar"></div>
-                <div class="help-icon">?</div>
-              </div>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'balance'" 
+          (click)="setActiveTab('balance')"
+        >
+          balance
+        </button>
+      </div>
+      
+      <!-- Contenido de la pestaña Subgastos -->
+      <div class="tab-content" *ngIf="activeTab === 'subgastos'">
+        <div class="subexpenses-list">
+          <div class="subexpense-item" *ngFor="let subExpense of subExpenses">
+            <div class="subexpense-info">
+              <h4>{{ subExpense.category }}</h4>
+              <p>Pagado por {{ subExpense.paidBy }}</p>
             </div>
+            <div class="subexpense-amount">
+              {{ formatCurrency(subExpense.amount) }}
+            </div>
+          </div>
+        </div>
+        
+        <div class="add-subexpense">
+          <button class="add-btn" (click)="addSubExpense()">
+            <span class="add-icon">+</span>
+          </button>
+          <p>Agregar subgasto</p>
+        </div>
+      </div>
+      
+      <!-- Contenido de la pestaña Balance -->
+      <div class="tab-content" *ngIf="activeTab === 'balance'">
+        <div class="balances-container">
+          <h3 class="balance-title">Balances</h3>
+          
+          <!-- Sección de lo que debes -->
+          <div class="balance-row you-owe">
+            <div class="balance-info">
+              <h4>Debes</h4>
+              <p class="balance-amount">{{ formatCurrency(youOwe) }}</p>
+            </div>
+            <button class="action-btn pay-btn" (click)="payDebt()" [disabled]="youOwe <= 0">Pagar</button>
           </div>
           
-          <div class="expense-status-section">
-            <h3>Estado del gasto</h3>
-            <p class="expense-amount">{{ formatCurrency(paidAmount) }} / {{ formatCurrency(totalAmount) }}</p>
-            <div class="progress-container">
-              <div class="progress-bar" [style.width.%]="calculateProgress()"></div>
+          <!-- Sección de lo que te deben -->
+          <div class="balance-row they-owe">
+            <div class="balance-info">
+              <h4>Te deben</h4>
+              <p class="balance-amount">{{ formatCurrency(theyOweYou) }}</p>
             </div>
-          </div>
-        </div>
-        
-        <div class="tabs-container">
-          <button 
-            class="tab-btn" 
-            [class.active]="activeTab === 'subgastos'" 
-            (click)="setActiveTab('subgastos')"
-          >
-            Subgastos
-          </button>
-          <button 
-            class="tab-btn" 
-            [class.active]="activeTab === 'balance'" 
-            (click)="setActiveTab('balance')"
-          >
-            balance
-          </button>
-        </div>
-        
-        <!-- Contenido de la pestaña Subgastos -->
-        <div class="tab-content" *ngIf="activeTab === 'subgastos'">
-          <div class="subexpenses-list">
-            <div class="subexpense-item" *ngFor="let subExpense of subExpenses">
-              <div class="subexpense-info">
-                <h4>{{ subExpense.category }}</h4>
-                <p>Pagado por {{ subExpense.paidBy }}</p>
-              </div>
-              <div class="subexpense-amount">
-                {{ formatCurrency(subExpense.amount) }}
-              </div>
-            </div>
+            <button class="action-btn register-btn" (click)="registerPayment()" [disabled]="theyOweYou <= 0">Registrar pago</button>
           </div>
           
-          <div class="add-subexpense">
-            <button class="add-btn" (click)="addSubExpense()">
-              <span class="add-icon">+</span>
-            </button>
-            <p>Agregar subgasto</p>
-          </div>
-        </div>
-        
-        <!-- Contenido de la pestaña Balance -->
-        <div class="tab-content" *ngIf="activeTab === 'balance'">
-          <div class="balances-container">
-            <h3 class="balance-title">Balances</h3>
-            
-            <!-- Sección de lo que debes -->
-            <div class="balance-row you-owe">
-              <div class="balance-info">
-                <h4>Debes</h4>
-                <p class="balance-amount">{{ formatCurrency(youOwe) }}</p>
-              </div>
-              <button class="action-btn pay-btn" (click)="payDebt()">Pagar</button>
-            </div>
-            
-            <!-- Sección de lo que te deben -->
-            <div class="balance-row they-owe">
-              <div class="balance-info">
-                <h4>Te deben</h4>
-                <p class="balance-amount">{{ formatCurrency(theyOweYou) }}</p>
-              </div>
-              <button class="action-btn register-btn" (click)="registerPayment()">Registrar pago</button>
-            </div>
-            
-            <!-- Lista de usuarios con sus balances -->
-            <div class="user-balances">
-              <div class="user-balance-item" *ngFor="let user of userBalances">
-                <div class="user-info">
-                  <div class="user-avatar">
-                    <span class="avatar-icon">👤</span>
-                  </div>
-                  <p class="user-name">{{ user.name }}</p>
+          <!-- Lista de usuarios con sus balances -->
+          <div class="user-balances">
+            <div class="user-balance-item" *ngFor="let user of userBalances">
+              <div class="user-info">
+                <div class="user-avatar">
+                  <span class="avatar-icon">👤</span>
                 </div>
-                <p class="user-balance" [ngClass]="{'positive': user.balance > 0, 'negative': user.balance < 0}">
-                  {{ user.balance > 0 ? '+' : '' }}{{ formatCurrency(user.balance) }}
-                </p>
+                <p class="user-name">{{ user.name }}</p>
               </div>
+              <p class="user-balance" [ngClass]="{'positive': user.balance > 0, 'negative': user.balance < 0}">
+                {{ user.balance > 0 ? '+' : '' }}{{ formatCurrency(user.balance) }}
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  
-    <!-- Footer -->
-    <footer class="app-footer">
-      <div class="footer-section">
-        <h3>Comunícate con nosotros:</h3>
-        <p>Email: sharemoney.soporte&#64;gmail.com</p>
-        <p>Teléfono: 1234567890</p>
-      </div>
-      
-      <div class="footer-section">
-        <h3>Políticas</h3>
-        <p>Políticas de privacidad</p>
-        <p>Términos y condiciones</p>
-        <p>Soporte</p>
-      </div>
-      
-      <div class="footer-section">
-        <h3>Síguenos</h3>
-        <div class="social-links">
-          <a href="#" class="social-link facebook">
-            <img src="/assets/imagenes/facebook-icon.png" alt="Facebook" class="social-icon">
-          </a>
-          <a href="#" class="social-link twitter">
-            <img src="/assets/imagenes/twitter-icon.png" alt="Twitter" class="social-icon">
-          </a>
-          <a href="#" class="social-link instagram">
-            <img src="/assets/imagenes/instagram-icon.png" alt="Instagram" class="social-icon">
-          </a>
-        </div>
-      </div>
-      
-      <div class="copyright">
-        <p>© 2025 ShareMoney. Todos los derechos reservados</p>
-      </div>
-    </footer>
   </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-section">
+      <h3>Comunícate con nosotros:</h3>
+      <p>Email: sharemoney.soporte&#64;gmail.com</p>
+      <p>Teléfono: 1234567890</p>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Políticas</h3>
+      <p>Políticas de privacidad</p>
+      <p>Términos y condiciones</p>
+      <p>Soporte</p>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Síguenos</h3>
+      <div class="social-links">
+        <a href="#" class="social-link facebook">
+          <img src="/assets/imagenes/facebook-icon.png" alt="Facebook" class="social-icon">
+        </a>
+        <a href="#" class="social-link twitter">
+          <img src="/assets/imagenes/twitter-icon.png" alt="Twitter" class="social-icon">
+        </a>
+        <a href="#" class="social-link instagram">
+          <img src="/assets/imagenes/instagram-icon.png" alt="Instagram" class="social-icon">
+        </a>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      <p>© 2025 ShareMoney. Todos los derechos reservados</p>
+    </div>
+  </footer>
+
+  <!-- Modal de Pago de Deuda -->
+  <app-pay-debt-modal 
+    *ngIf="showPayDebtModal"
+    [totalDebt]="youOwe"
+    [users]="getUsersYouOwe()"
+    (close)="closePayDebtModal()"
+    (paymentConfirmed)="handlePaymentConfirmed($event)"
+  ></app-pay-debt-modal>
+
+  <!-- Modal de Registro de Pago -->
+  <app-register-payment-modal 
+    *ngIf="showRegisterPaymentModal"
+    [totalOwed]="theyOweYou"
+    [users]="getUsersWhoOweYou()"
+    (close)="closeRegisterPaymentModal()"
+    (paymentRegistered)="handlePaymentRegistered($event)"
+  ></app-register-payment-modal>
+</div>
