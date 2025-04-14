@@ -1,0 +1,104 @@
+<div class="dashboard-container">
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-left">
+        <h1>INICIO</h1>
+      </div>
+      <div class="header-right">
+        <button class="notification-btn">Notificaciones</button>
+        <button class="logout-btn" (click)="logout()">Cerrar sesión</button>
+      </div>
+    </header>
+  
+    <!-- Main Content -->
+    <div class="dashboard-content">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="logo-container">
+          <img src="/assets/imagenes/Logo.png" alt="MoneyShare Logo" class="logo">
+        </div>
+        
+        <h2 class="welcome-message">¡Bienvenido a MoneyShare, {{userName}}!</h2>
+        
+        <div class="sidebar-menu">
+          <button class="sidebar-btn create-btn" (click)="createNewShareAccount()">
+            <span class="btn-icon">+</span>
+            Crear nuevo ShareAccount
+          </button>
+          
+          <button class="sidebar-btn" (click)="joinShareByCode()">
+            Unirse a un share por código
+          </button>
+          
+          <button class="sidebar-btn" (click)="viewReport()">
+            Ver informe
+          </button>
+          
+          <button class="sidebar-btn view-all" (click)="viewAll()">
+            Ver todo
+          </button>
+          
+          <button class="sidebar-btn" (click)="viewExpenses()">
+            Mis gastos
+          </button>
+          
+          <button class="sidebar-btn" (click)="viewDebts()">
+            Mis deudas
+          </button>
+          
+          <button class="sidebar-btn" (click)="viewGoals()">
+            Mis metas
+          </button>
+        </div>
+      </div>
+  
+      <!-- Main Dashboard -->
+      <div class="main-dashboard">
+        <h2 class="section-title">Mis SharesAccounts</h2>
+        
+        <div class="shares-grid">
+          <div class="share-card" *ngFor="let share of shareAccounts">
+            <div class="share-header">
+              <h3 class="share-title">{{share.title}}</h3>
+              <p class="share-subtitle">{{share.subtitle}}</p>
+            </div>
+            
+            <p class="share-amount">{{formatCurrency(share.amount)}}</p>
+            
+            <div class="share-participants">
+              <span class="participant-dot" *ngFor="let dot of getParticipantDots(share.participants)"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <div class="footer-section">
+        <h3>Comunícate con nosotros:</h3>
+        <p>Email: sharemoney.soporte&#64;gmail.com</p>
+        <p>Teléfono: 3123456789</p>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Políticas</h3>
+        <p>Políticas de privacidad</p>
+        <p>Términos y condiciones</p>
+        <p>Soporte</p>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Síguenos</h3>
+        <div class="social-links">
+          <a href="#" class="social-link facebook">Facebook</a>
+          <a href="#" class="social-link twitter">Twitter</a>
+          <a href="#" class="social-link instagram">Instagram</a>
+        </div>
+      </div>
+      
+      <div class="copyright">
+        <p>© 2025 ShareMoney. Todos los derechos reservados</p>
+      </div>
+    </footer>
+  </div>
