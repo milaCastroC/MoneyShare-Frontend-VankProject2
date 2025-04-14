@@ -143,13 +143,21 @@
     gap: 15px;
   }
   
-  .share-card {
+/* Añadir o modificar el estilo de la tarjeta de share para indicar que es clickeable */
+.share-card {
     background-color: white;
     border-radius: 8px;
     padding: 15px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
+    cursor: pointer; /* Añadir cursor pointer para indicar que es clickeable */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Añadir transición para efecto hover */
+  }
+  
+  .share-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
   
   .share-header {

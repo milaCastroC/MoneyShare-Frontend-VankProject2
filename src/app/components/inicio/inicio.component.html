@@ -52,26 +52,26 @@
         </div>
       </div>
   
-      <!-- Main Dashboard -->
-      <div class="main-dashboard">
-        <h2 class="section-title">Mis SharesAccounts</h2>
+   <!-- Main Dashboard -->
+   <div class="main-dashboard">
+    <h2 class="section-title">Mis SharesAccounts</h2>
+    
+    <div class="shares-grid">
+      <div class="share-card" *ngFor="let share of shareAccounts" (click)="viewShareExpense(share.id)">
+        <div class="share-header">
+          <h3 class="share-title">{{share.title}}</h3>
+          <p class="share-subtitle">{{share.subtitle}}</p>
+        </div>
         
-        <div class="shares-grid">
-          <div class="share-card" *ngFor="let share of shareAccounts">
-            <div class="share-header">
-              <h3 class="share-title">{{share.title}}</h3>
-              <p class="share-subtitle">{{share.subtitle}}</p>
-            </div>
-            
-            <p class="share-amount">{{formatCurrency(share.amount)}}</p>
-            
-            <div class="share-participants">
-              <span class="participant-dot" *ngFor="let dot of getParticipantDots(share.participants)"></span>
-            </div>
-          </div>
+        <p class="share-amount">{{formatCurrency(share.amount)}}</p>
+        
+        <div class="share-participants">
+          <span class="participant-dot" *ngFor="let dot of getParticipantDots(share.participants)"></span>
         </div>
       </div>
     </div>
+  </div>
+</div>
   
     <!-- Footer -->
     <footer class="dashboard-footer">
