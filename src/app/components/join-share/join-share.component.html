@@ -1,0 +1,31 @@
+<div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeModal()">✕</button>
+      
+      <h2 class="modal-title">Unirse a un share por código</h2>
+      
+      <div class="modal-content">
+        <div class="form-group">
+          <label for="shareCode">Ingresa el código aquí:</label>
+          <input 
+            type="text" 
+            id="shareCode" 
+            class="form-control" 
+            [(ngModel)]="shareCode" 
+            placeholder="FYUBI258135"
+            [disabled]="isLoading"
+          >
+          <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+        </div>
+        
+        <button 
+          class="join-btn" 
+          (click)="joinShare()" 
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading">Unirme a un Share</span>
+          <span *ngIf="isLoading" class="spinner"></span>
+        </button>
+      </div>
+    </div>
+  </div>

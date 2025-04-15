@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { JoinShareModalComponent } from "../join-share/join-share.component";
 
 interface ShareAccount {
   id: number;
@@ -14,7 +15,7 @@ interface ShareAccount {
 @Component({
   selector: 'app-inicio',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, JoinShareModalComponent],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css'
 })
@@ -73,6 +74,9 @@ export class InicioComponent implements OnInit{
     }
   ];
 
+   // Estado para controlar la visibilidad del modal
+   showJoinShareModal: boolean = false;
+
   constructor(private router: Router) { }
 
   ngOnInit(): void {
@@ -97,8 +101,13 @@ export class InicioComponent implements OnInit{
   }
 
   joinShareByCode(): void {
-    console.log('Unirse a un share por código');
-    // Implementar lógica para unirse a un share
+    // Mostrar el modal
+    this.showJoinShareModal = true;
+  }
+  
+  closeJoinShareModal(): void {
+    // Cerrar el modal
+    this.showJoinShareModal = false;
   }
 
   viewReport(): void {

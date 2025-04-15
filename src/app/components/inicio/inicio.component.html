@@ -101,4 +101,11 @@
         <p>© 2025 ShareMoney. Todos los derechos reservados</p>
       </div>
     </footer>
+
+    <!-- Modal para unirse a un share por código -->
+  <app-join-share-modal 
+  *ngIf="showJoinShareModal" 
+  (close)="closeJoinShareModal()"
+></app-join-share-modal>
+
   </div>
