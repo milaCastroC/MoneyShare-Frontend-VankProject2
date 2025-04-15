@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AppHeaderComponent } from "../app-header/app-header.component";
 
 interface ShareParticipant {
   id: number;
@@ -14,7 +15,7 @@ interface ShareParticipant {
 @Component({
   selector: 'app-edit-share-expense',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AppHeaderComponent],
   templateUrl: './edit-share.component.html',
   styleUrls: ['./edit-share.component.css']
 })

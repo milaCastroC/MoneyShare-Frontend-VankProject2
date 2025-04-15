@@ -15,7 +15,7 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent}, //Ruta Login
     { path: 'register', component: RegisterComponent }, // Ruta Registro
     { path: 'inicio', component: InicioComponent }, // Ruta Inicio
-    { path: 'create-expense', component: CreateShareExpenseComponent }, // Ruta Crear Gasto
+    { path: 'create-shareexpense', component: CreateShareExpenseComponent }, // Ruta Crear Gasto
     { path: 'share-expense/:id', component: ShareExpenseDetailComponent }, // Ruta Detalle Gasto Compartido
     { path: 'create-expense/:id', component: CreateExpenseComponent }, // Ruta Crear Gasto
     { path: 'edit-share-expense/:id', component: EditShareExpenseComponent }, // Ruta Editar Gasto Compartido

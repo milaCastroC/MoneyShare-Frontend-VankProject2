@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { PayDebtModalComponent } from '../pay-debt-modal/pay-debt-modal.component';
 import { RegisterPaymentModalComponent } from '../register-payment-modal/register-payment-modal.component';
+import { AppHeaderComponent } from "../app-header/app-header.component";
 
 interface SubExpense {
   id: number;
@@ -21,7 +22,7 @@ interface UserBalance {
 @Component({
   selector: 'app-share-expense-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, PayDebtModalComponent, RegisterPaymentModalComponent],
+  imports: [CommonModule, RouterModule, PayDebtModalComponent, RegisterPaymentModalComponent, AppHeaderComponent],
   templateUrl: './share-expense-detail.component.html',
   styleUrls: ['./share-expense-detail.component.css']
 })

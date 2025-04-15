@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AppHeaderComponent } from "../app-header/app-header.component";
 
 @Component({
   selector: 'app-create-share-expense',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, AppHeaderComponent],
   templateUrl: './create-share-expense.component.html',
   styleUrl: './create-share-expense.component.css'
 })

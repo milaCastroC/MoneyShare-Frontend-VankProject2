@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { JoinShareModalComponent } from "../join-share/join-share.component";
+import { AppHeaderComponent } from "../app-header/app-header.component";
 
 interface ShareAccount {
   id: number;
@@ -15,7 +16,7 @@ interface ShareAccount {
 @Component({
   selector: 'app-inicio',
   standalone: true,
-  imports: [CommonModule, RouterModule, JoinShareModalComponent],
+  imports: [CommonModule, RouterModule, JoinShareModalComponent, AppHeaderComponent],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css'
 })

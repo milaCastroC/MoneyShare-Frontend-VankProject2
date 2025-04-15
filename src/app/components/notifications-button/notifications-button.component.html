@@ -1,0 +1,11 @@
+<div class="notification-button-container">
+    <button class="notification-btn" (click)="togglePanel()">
+      Notificaciones
+      <span *ngIf="unreadCount > 0" class="badge">{{ unreadCount }}</span>
+    </button>
+    
+    <app-notifications-panel 
+      *ngIf="showPanel" 
+      (close)="closePanel()"
+    ></app-notifications-panel>
+  </div>

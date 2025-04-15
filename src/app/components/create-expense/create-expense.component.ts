@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AppHeaderComponent } from "../app-header/app-header.component";
 
 @Component({
   selector: 'app-create-expense',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AppHeaderComponent],
   templateUrl: './create-expense.component.html',
   styleUrls: ['./create-expense.component.css']
 })
