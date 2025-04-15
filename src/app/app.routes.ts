@@ -7,6 +7,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 import { CreateShareExpenseComponent } from './components/create-share-expense/create-share-expense.component';
 import { ShareExpenseDetailComponent } from './components/share-expense-detail/share-expense-detail.component';
+import { CreateExpenseComponent } from './create-expense/create-expense.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },//Ruta principal
@@ -15,6 +16,7 @@ export const routes: Routes = [
     { path: 'inicio', component: InicioComponent }, // Ruta Inicio
     { path: 'create-expense', component: CreateShareExpenseComponent }, // Ruta Crear Gasto
     { path: 'share-expense/:id', component: ShareExpenseDetailComponent }, // Ruta Detalle Gasto Compartido
+    { path: 'create-expense/:id', component: CreateExpenseComponent }, // Ruta Crear Gasto
 ];
 
 // @NgModule({
