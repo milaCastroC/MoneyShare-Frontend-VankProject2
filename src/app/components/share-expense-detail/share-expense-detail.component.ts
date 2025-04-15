@@ -200,4 +200,11 @@ export class ShareExpenseDetailComponent implements OnInit {
         name: user.name
       }));
   }
+
+  // Añadir este método al componente ShareExpenseDetailComponent
+editShareExpense(): void {
+  if (this.route.snapshot.paramMap.get('id')) {
+    this.router.navigate(['/edit-share-expense', this.route.snapshot.paramMap.get('id')]);
+  }
+}
 }

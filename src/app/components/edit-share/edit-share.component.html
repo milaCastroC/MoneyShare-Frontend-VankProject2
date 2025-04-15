@@ -1,0 +1,136 @@
+<div class="edit-share-expense-container">
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <img src="/assets/imagenes/Logo.png" alt="MoneyShare Logo" class="logo">
+    </div>
+    <div class="header-title">
+      <h1>EDITAR SHAREEXPENSE</h1>
+    </div>
+    <div class="header-right">
+      <button class="header-btn">Notificaciones</button>
+      <button class="header-btn" (click)="logout()">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="form-container">
+      <button class="back-btn" (click)="goBack()">
+        <span class="back-icon">←</span> Volver
+      </button>
+      
+      <h2 class="form-title">Editar ShareExpense</h2>
+      
+      <div class="form-group">
+        <label for="expenseName">Nombre:</label>
+        <input 
+          type="text" 
+          id="expenseName" 
+          class="form-control" 
+          [(ngModel)]="expenseName" 
+          placeholder="Ingresa el nombre del ShareExpense"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="expenseDescription">Descripción (opcional)</label>
+        <textarea 
+          id="expenseDescription" 
+          class="form-control textarea" 
+          [(ngModel)]="expenseDescription" 
+          placeholder="Ingresa una descripción para el ShareExpense"
+          rows="4"
+        ></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label>Porcentajes</label>
+        
+        <div class="participants-list">
+          <div class="participant-item" *ngFor="let participant of participants">
+            <div class="participant-info">
+              <div class="participant-avatar">
+                <span class="avatar-icon">👤</span>
+              </div>
+              <span class="participant-name">{{ participant.name }}</span>
+            </div>
+            
+            <div class="participant-percentage">
+              <!-- Modo de visualización -->
+              <div *ngIf="!participant.isEditing" class="percentage-display">
+                <span class="percentage-badge" (click)="startEditingPercentage(participant)">
+                  {{ formatPercentage(participant.percentage) }}
+                </span>
+                <span class="amount-badge">{{ formatCurrency(participant.amount) }}</span>
+              </div>
+              
+              <!-- Modo de edición -->
+              <div *ngIf="participant.isEditing" class="percentage-edit">
+                <div class="percentage-input-container">
+                  <input 
+                    type="number" 
+                    class="percentage-input" 
+                    [value]="participant.percentage" 
+                    #percentageInput
+                    min="0.001" 
+                    max="100" 
+                    step="0.001"
+                  >
+                  <span class="percentage-symbol">%</span>
+                </div>
+                <div class="edit-actions">
+                  <button class="edit-action-btn save-btn" (click)="savePercentage(participant, percentageInput.value)">
+                    ✓
+                  </button>
+                  <button class="edit-action-btn cancel-btn" (click)="cancelEditingPercentage(participant)">
+                    ✕
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button class="save-btn" (click)="saveChanges()">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-section">
+      <h3>Comunícate con nosotros:</h3>
+      <p>Email: sharemoney.soporte&#64;gmail.com</p>
+      <p>Teléfono: 1234567890</p>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Políticas</h3>
+      <p>Políticas de privacidad</p>
+      <p>Términos y condiciones</p>
+      <p>Soporte</p>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Síguenos</h3>
+      <div class="social-links">
+        <a href="#" class="social-link facebook">
+          <img src="/assets/imagenes/facebook-icon.png" alt="Facebook" class="social-icon">
+        </a>
+        <a href="#" class="social-link twitter">
+          <img src="/assets/imagenes/twitter-icon.png" alt="Twitter" class="social-icon">
+        </a>
+        <a href="#" class="social-link instagram">
+          <img src="/assets/imagenes/instagram-icon.png" alt="Instagram" class="social-icon">
+        </a>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      <p>© 2025 ShareMoney. Todos los derechos reservados</p>
+    </div>
+  </footer>
+</div>
