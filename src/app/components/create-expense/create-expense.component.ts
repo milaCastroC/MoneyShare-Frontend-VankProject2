@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { AppHeaderComponent } from "../app-header/app-header.component";
 
 @Component({
@@ -14,8 +14,16 @@ import { AppHeaderComponent } from "../app-header/app-header.component";
 export class CreateExpenseComponent {
   expenseName: string = '';
   expenseAmount: number | null = null;
+
   
-  constructor(private router: Router) { }
+  constructor(private router: Router, private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+    // Aquí se cargarían los datos del ShareExpense desde un servicio
+    // usando el ID que vendría en la URL
+    const id = this.route.snapshot.paramMap.get('id');
+    console.log('ShareExpense ID:', id);
+  }
   
   createShare(): void {
     // Validar que los campos no estén vacíos
@@ -43,7 +51,7 @@ export class CreateExpenseComponent {
   }
   
   goBack(): void {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/share-expense', this.route.snapshot.paramMap.get('id')]);
   }
   
   logout(): void {

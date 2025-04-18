@@ -93,7 +93,7 @@ export class InicioComponent implements OnInit{
 
   createNewShareAccount(): void {
     console.log('Crear nuevo ShareAccount');
-    this.router.navigate(['/create-share-expense']);
+    this.router.navigate(['/create-shareexpense']);
   }
 
   viewShareExpense(id: number): void {
@@ -109,31 +109,6 @@ export class InicioComponent implements OnInit{
   closeJoinShareModal(): void {
     // Cerrar el modal
     this.showJoinShareModal = false;
-  }
-
-  viewReport(): void {
-    console.log('Ver informe');
-    // Implementar navegación a la página de informes
-  }
-
-  viewAll(): void {
-    console.log('Ver todo');
-    // Implementar navegación a la página de todos los shares
-  }
-
-  viewExpenses(): void {
-    console.log('Mis gastos');
-    // Implementar navegación a la página de gastos
-  }
-
-  viewDebts(): void {
-    console.log('Mis deudas');
-    // Implementar navegación a la página de deudas
-  }
-
-  viewGoals(): void {
-    console.log('Mis metas');
-    // Implementar navegación a la página de metas
   }
 
   logout(): void {

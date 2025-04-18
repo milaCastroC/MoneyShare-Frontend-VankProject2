@@ -80,6 +80,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  font-weight: bold;
 }
 
 .back-icon {
@@ -275,7 +276,7 @@
 
 .save-btn {
   padding: 12px 30px;
-  background-color: #999;
+  background-color: #4CAF50;
   color: white;
   border: none;
   border-radius: 4px;

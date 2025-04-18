@@ -9,5 +9,6 @@ export class UsuarioService {
 
   loginUsuario(credentials: { email: string; password: string }) {
     return this.api.post('/user/login', credentials);
+
   }
 }

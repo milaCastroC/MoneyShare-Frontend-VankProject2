@@ -102,6 +102,7 @@ export class ShareExpenseDetailComponent implements OnInit {
   addSubExpense(): void {
     // Aquí se implementaría la lógica para agregar un nuevo subgasto
     console.log('Agregar subgasto');
+    this.router.navigate(['/create-expense', this.route.snapshot.paramMap.get('id')]);
   }
 
   payDebt(): void {
@@ -169,7 +170,7 @@ export class ShareExpenseDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/inicio']);
   }
 
   logout(): void {

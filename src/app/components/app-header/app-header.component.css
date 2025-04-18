@@ -24,14 +24,16 @@
   }
   
   .header-btn {
-    background-color: #e0e0e0;
-    color: #333;
+    background-color: white;
+    color: #4CAF50;
     border: none;
     padding: 6px 12px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
+    font-weight: 600;
     transition: all 0.3s ease;
+    position: relative;
   }
   
   .header-btn:hover {
