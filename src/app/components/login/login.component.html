@@ -53,6 +53,11 @@
           </div>
           
           <button type="submit" class="login-button">INICIAR SESIÓN</button>
+          
+          <div *ngIf="errorMessage" class="error-message" style="margin-bottom: 10px;">
+            {{ errorMessage }}
+          </div>
+          
       </form>
       
       <p>¿No tienes una cuenta aún? <a routerLink="/register">REGÍSTRATE AQUÍ</a></p>

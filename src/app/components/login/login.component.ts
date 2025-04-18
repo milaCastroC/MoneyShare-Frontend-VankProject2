@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-login',
@@ -14,40 +15,48 @@ import { Router, RouterModule } from '@angular/router';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   submitted = false;
+  errorMessage = '';
 
   constructor(
-    private formBuilder: FormBuilder,
+    private fb: FormBuilder,
+    private usuarioService: UsuarioService,
     private router: Router
   ) {}
-
-  ngOnInit(): void {
-    this.loginForm = this.formBuilder.group({
-      email: ['', [
-        Validators.required, 
-        Validators.email,
-        Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
-      ]],
-      password: ['', [
-        Validators.required,
-        Validators.minLength(8)
-      ]]
+ ngOnInit(): void {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 
-  // Getter para acceder fácilmente a los campos del formulario
-  get f() { 
-    return this.loginForm.controls; 
+  get f() {
+    return this.loginForm.controls;
   }
 
   onSubmit(): void {
     this.submitted = true;
 
-    // Detener si el formulario es inválido
     if (this.loginForm.invalid) {
       return;
     }
 
-    // Aquí iría la lógica para enviar los datos al servicio de autenticación
-    console.log('Datos de inicio de sesión:', this.loginForm.value);
+    const credentials = this.loginForm.value;
+
+    this.usuarioService.loginUsuario(credentials)
+      .then((response: any) => {
+        console.log('Login exitoso:', response);
+
+        // Guardar token si se recibe uno
+        if (response.token) {
+          localStorage.setItem('token', response.token);
+        }
+
+        // Redirigir al home o dashboard
+        this.router.navigate(['/home']);
+      })
+      .catch(error => {
+        console.error('Error en login:', error);
+        this.errorMessage = 'Credenciales inválidas o error en el servidor';
+      });
   }
 }
