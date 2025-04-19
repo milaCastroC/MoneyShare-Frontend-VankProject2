@@ -18,22 +18,29 @@
               type="text" 
               id="name" 
               formControlName="name"
+              placeholder="Ej. Viaje Cancún"
               [ngClass]="{'is-invalid': shareExpenseForm.get('name')?.invalid && shareExpenseForm.get('name')?.touched}"
             >
             <div class="error-message" *ngIf="shareExpenseForm.get('name')?.invalid && shareExpenseForm.get('name')?.touched">
-              <div *ngIf="shareExpenseForm.get('name')?.errors?.['required']">El nombre es requerido</div>
-              <div *ngIf="shareExpenseForm.get('name')?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres</div>
+              <div *ngIf="shareExpenseForm.get('name')?.errors?.['required']">El nombre es requerido.</div>
+              <div *ngIf="shareExpenseForm.get('name')?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres.</div>
             </div>
           </div>
-          
+
           <div class="form-group">
             <label for="deadline">Fecha límite (OPCIONAL):</label>
             <input 
               type="text" 
               id="deadline" 
               formControlName="deadline"
-              placeholder="DD / MM / YY"
+              placeholder="YYYY-MM-DD"
+              [ngClass]="{'is-invalid': shareExpenseForm.get('deadline')?.invalid && shareExpenseForm.get('deadline')?.touched}"
             >
+            <div class="error-message" *ngIf="shareExpenseForm.get('deadline')?.invalid && shareExpenseForm.get('deadline')?.touched">
+              <div *ngIf="shareExpenseForm.get('deadline')?.errors?.['invalidDateFormat']">
+                Formato de fecha inválido. Usa YYYY-MM-DD.
+              </div>
+            </div>
           </div>
           
           <div class="form-group">

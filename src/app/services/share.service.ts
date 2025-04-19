@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
+import { Share } from '../models/share.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,10 @@ export class ShareService {
 
   fetchUserShares() {
     return this.api.get('/share/find-by-user');
+  }
+
+  createShare(shareData: any) {
+    return this.api.post('/share/create', shareData)
   }
 
 }
