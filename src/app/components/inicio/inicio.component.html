@@ -32,7 +32,7 @@
       <div class="share-card" *ngFor="let share of shareAccounts" (click)="viewShareExpense(share.id)">
         <div class="share-header">
           <h3 class="share-title">{{share.title}}</h3>
-          <p class="share-subtitle">{{share.subtitle}}</p>
+          <p class="share-subtitle">{{ truncateDescription(share.subtitle || '', 8) }}</p>
         </div>
         
         <p class="share-amount">{{formatCurrency(share.amount)}}</p>
