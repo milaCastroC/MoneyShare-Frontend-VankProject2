@@ -1,5 +1,5 @@
 export interface Share {
-  id_share: number;
+  id_share?: number;
   id_creator: number;
   type: 'share_expense' | 'share_goal' | 'share_debt';
   code: string;
