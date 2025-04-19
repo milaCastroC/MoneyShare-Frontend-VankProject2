@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
         }
 
         // Redirigir al home o dashboard
-        this.router.navigate(['/home']);
+        this.router.navigate(['/inicio']);
       })
       .catch(error => {
         console.error('Error en login:', error);

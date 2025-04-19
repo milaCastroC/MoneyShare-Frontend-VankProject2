@@ -45,7 +45,7 @@ export class CreateShareExpenseComponent implements OnInit{
   }
 
   goBack(): void {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/inicio']);
   }
 
   logout(): void {
