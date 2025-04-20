@@ -2,6 +2,8 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ShareService } from '../../services/share.service';
+import { Share } from '../../models/share.model';
 
 @Component({
   selector: 'app-join-share-modal',
@@ -17,10 +19,17 @@ export class JoinShareModalComponent {
   isLoading: boolean = false;
   errorMessage: string | null = null;
   
-  constructor(private router: Router) { }
+  constructor(private router: Router, private shareService: ShareService) { }
   
   closeModal(): void {
     this.close.emit();
+  }
+
+  reloadCurrentRoute() {
+    const currentUrl = this.router.url;
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([currentUrl]);
+    });
   }
   
   joinShare(): void {
@@ -30,32 +39,27 @@ export class JoinShareModalComponent {
       return;
     }
     
-    // Resetear mensaje de error
     this.errorMessage = null;
-    
-    // Mostrar estado de carga
     this.isLoading = true;
+
+    this.shareService.joinShare({code: this.shareCode})
+    .then((response: any) => {
+      alert('Te has unido al share exitosamente');
+      const idShare = response.data.id_share;
+      
+      this.closeModal();
+      console.log(response.data.share_id);
+      
+      //this.reloadCurrentRoute();
+      this.router.navigate(['/share-expense', idShare]);
+    })
+    .catch(error => {
+      console.error('Error en login:', error);
+      this.errorMessage = error.response.data.message;
+    })
+    .finally(() => {
+      this.isLoading = false;
+    });
     
-    // Aquí se implementaría la lógica para unirse al share usando el código
-    // Simulación de una llamada al backend
-    setTimeout(() => {
-      // Simulación de éxito (en un caso real, esto sería una llamada a un servicio)
-      if (this.shareCode === 'FYUBI258135') {
-        // Código válido, redirigir al detalle del share
-        this.isLoading = false;
-        
-        // Simulación de ID del share al que se unió
-        const shareId = 123;
-        
-        // Mostrar mensaje de éxito y redirigir
-        alert('Te has unido al share exitosamente');
-        this.closeModal();
-        this.router.navigate(['/share-expense', shareId]);
-      } else {
-        // Código inválido, mostrar error
-        this.isLoading = false;
-        this.errorMessage = 'El código ingresado no es válido o ha expirado';
-      }
-    }, 1500); // Simular un retraso de red
   }
 }

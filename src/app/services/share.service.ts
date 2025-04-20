@@ -16,4 +16,11 @@ export class ShareService {
     return this.api.post('/share/create', shareData)
   }
 
+  joinShare(code: any) {
+    return this.api.post('/share/members/add', code);
+  }
+
+  findShareByCode(code: any) {
+    return this.api.get(`/share/find/code/${code}`);
+  }
 }
