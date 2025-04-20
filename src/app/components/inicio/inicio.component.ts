@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { JoinShareModalComponent } from "../join-share/join-share.component";
 import { AppHeaderComponent } from "../app-header/app-header.component";
+import { ShareService } from '../../services/share.service';
+import { Share } from '../../models/share.model';
+import { ShareSplitService } from '../../services/share-split.service';
 
 interface ShareAccount {
   id: number;
@@ -20,67 +23,62 @@ interface ShareAccount {
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css'
 })
-export class InicioComponent implements OnInit{
+export class InicioComponent implements OnInit {
   userName: string = 'Fulanito';
-  
-  shareAccounts: ShareAccount[] = [
-    { 
-      id: 1, 
-      title: 'Viaje Medellín', 
-      subtitle: 'Marzo', 
-      amount: 150000, 
-      participants: 3 
-    },
-    { 
-      id: 2, 
-      title: 'Plata de Don Luis', 
-      subtitle: 'Marzo', 
-      amount: 650000, 
-      participants: 2 
-    },
-    { 
-      id: 3, 
-      title: 'Viaje de fin de año', 
-      subtitle: 'Marzo', 
-      amount: 1750000, 
-      participants: 3 
-    },
-    { 
-      id: 4, 
-      title: 'Viaje Medellín', 
-      subtitle: 'Enero', 
-      amount: 150000, 
-      participants: 3 
-    },
-    { 
-      id: 5, 
-      title: 'Plata de Don Luis', 
-      subtitle: 'Enero', 
-      amount: 650000, 
-      participants: 2 
-    },
-    { 
-      id: 6, 
-      title: 'Viaje de fin de año', 
-      subtitle: 'Enero', 
-      amount: 1750000, 
-      participants: 3 
-    },
-    { 
-      id: 7, 
-      title: 'Viaje Medellín', 
-      subtitle: 'Enero', 
-      amount: 150000, 
-      participants: 3 
-    }
-  ];
 
-   // Estado para controlar la visibilidad del modal
-   showJoinShareModal: boolean = false;
+  shareAccounts: ShareAccount[] = [];
 
-  constructor(private router: Router) { }
+  // Estado para controlar la visibilidad del modal
+  showJoinShareModal: boolean = false;
+
+  constructor(private router: Router, private shareService: ShareService, private shareSplitService: ShareSplitService) { }
 
   ngOnInit(): void {
+    this.loadUserShares();
+  }
+
+  async loadUserShares(): Promise<void> {
+    try {
+      const response: any = await this.shareService.fetchUserShares();
+      const shares = response.data;
+
+      const shareAccounts = await Promise.all(
+        shares.map(async (share: any) => {
+          const participants: any = await this.shareSplitService.countMemberByShare(share.id_share);
+
+          if (share.type == 'share_expense') {
+            return {
+              id: share.id_share,
+              title: share.name,
+              subtitle: share.description,
+              amount: share.paid_amount,
+              participants: participants.data
+            } as ShareAccount;
+          }
+
+          return {
+            id: share.id_share,
+            title: share.name,
+            subtitle: share.description,
+            amount: share.amount,
+            participants: participants.data
+          } as ShareAccount;
+        })
+      );
+
+      this.shareAccounts = shareAccounts;
+
+    } catch (error) {
+      console.error('Error loading shares:', error);
+    }
+  }
+
+  truncateDescription(text: string, maxWords: number): string {
+    const words = text.split(' ');
+    if (words.length > maxWords) {
+      return words.slice(0, maxWords).join(' ') + '...';
+    }
+    return text;
   }
 
   formatCurrency(amount: number): string {
@@ -105,7 +103,7 @@ export class InicioComponent implements OnInit{
     // Mostrar el modal
     this.showJoinShareModal = true;
   }
-  
+
   closeJoinShareModal(): void {
     // Cerrar el modal
     this.showJoinShareModal = false;

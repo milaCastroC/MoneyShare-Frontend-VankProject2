@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { User } from '../../models/user.model';
+import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-register',
@@ -18,8 +20,9 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
+    private usuarioService: UsuarioService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
@@ -37,7 +40,7 @@ export class RegisterComponent implements OnInit {
       contrasena: ['', [
         Validators.required,
         Validators.minLength(8),
-        Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$')
+        Validators.pattern('^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=[\\]{};\'"\\\\|,.<>/?]).{8,}$')
       ]],
       correo: ['', [
         Validators.required,
@@ -64,10 +67,22 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    // Aquí iría la lógica para enviar los datos al servicio de registro
-    console.log('Datos de registro:', this.registerForm.value);
-    
-    // Navegación después de registro exitoso
-    // this.router.navigate(['/login']);
+    const user: User = {
+      name: this.registerForm.value.nombre,
+      username: this.registerForm.value.usuario,
+      password: this.registerForm.value.contrasena,
+      email: this.registerForm.value.correo,
+      tel: this.registerForm.value.telefono
+    };
+
+    this.usuarioService.registerUsuario(user)
+      .then((response: any) => {
+        console.log('registro exitoso:', response);
+        this.router.navigate(['/login']);
+      })
+      .catch(error => {
+        console.error('Error en login:', error);
+      });
+
   }
 }

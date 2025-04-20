@@ -47,8 +47,8 @@ export class LoginComponent implements OnInit {
         console.log('Login exitoso:', response);
 
         // Guardar token si se recibe uno
-        if (response.token) {
-          localStorage.setItem('token', response.token);
+        if (response.data.token) {
+          localStorage.setItem('token', response.data.token);
         }
 
         // Redirigir al home o dashboard
@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
       })
       .catch(error => {
         console.error('Error en login:', error);
-        this.errorMessage = 'Credenciales inválidas o error en el servidor';
+        this.errorMessage = 'Correo o contraseña incorrectos.';
       });
   }
 }

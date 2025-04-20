@@ -17,6 +17,7 @@ export class AppHeaderComponent {
   
   logout(): void {
     // Implementar lógica de cierre de sesión
-    this.router.navigate(['/login']);
+    localStorage.removeItem('token');
+    this.router.navigate(['/']);
   }
 }
