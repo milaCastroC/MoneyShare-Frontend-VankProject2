@@ -11,8 +11,10 @@ import { UsuarioService } from '../../services/usuario.service';
 interface SubExpense {
   id: number;
   category: string;
+  description: string;
   amount: number;
-  paidBy: string;
+  paidBy?: string;
+  userId?: number; 
 }
 
 interface UserBalance {
@@ -35,7 +37,6 @@ export class ShareExpenseDetailComponent implements OnInit {
   totalAmount: number = 1000000;
   paidAmount: number = 200000;
   activeTab: 'subgastos' | 'balance' = 'subgastos';
-  
   // Datos para la pestaña de subgastos
   subExpenses: SubExpense[] = [];
 
@@ -79,12 +80,20 @@ export class ShareExpenseDetailComponent implements OnInit {
         this.expenseService.getExpensesByShareId(id)
           .then((res: any) => {
             console.log('Respuesta de expenses:', res);
+            
             this.subExpenses = res.data.map((expense: any) => ({
-              id: expense.id,
+              id: expense.id_expense,
+              description: expense.description,
               category: expense.category,
               amount: expense.amount,
-              paidBy: this.usuarioService.getUsuarioById(expense.userId) // o como venga del backend
+              userId: expense.id_user
             }));
+
+            this.subExpenses.forEach(expense => {
+              if (expense.userId) {
+                this.getUsername(expense);
+              }
+            });
             console.log('SubExpenses procesados:', this.subExpenses);
           })
           .catch(err => {
@@ -95,6 +104,19 @@ export class ShareExpenseDetailComponent implements OnInit {
     const tab = this.route.snapshot.queryParamMap.get('tab');
     if (tab === 'balance') {
       this.activeTab = 'balance';
+    }
+  }
+
+  getUsername(expense: SubExpense): void {
+    if (expense.userId) {
+      this.usuarioService.getUsuarioById(expense.userId)
+        .then((response: any) => {
+          expense.paidBy = response.data.username;
+        })
+        .catch(error => {
+          console.error(`Error obteniendo el nombre del usuario ${expense.userId}:`, error);
+          expense.paidBy = `Usuario ${expense.userId}`;
+        });
     }
   }
 

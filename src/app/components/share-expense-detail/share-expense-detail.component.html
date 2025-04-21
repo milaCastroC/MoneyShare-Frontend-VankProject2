@@ -59,7 +59,8 @@
         <div class="subexpenses-list">
           <div class="subexpense-item" *ngFor="let subExpense of subExpenses">
             <div class="subexpense-info">
-              <h4>{{ subExpense.category }}</h4>
+              <h4>{{ subExpense.description }}</h4>
+              <h5>{{ subExpense.category }}</h5>
               <p>Pagado por {{ subExpense.paidBy }}</p>
             </div>
             <div class="subexpense-amount">

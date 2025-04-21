@@ -6,7 +6,7 @@ import { AppHeaderComponent } from "../app-header/app-header.component";
 
 @Component({
   selector: 'app-create-expense',
-  standalone: true,
+  standalone: true, 
   imports: [CommonModule, FormsModule, AppHeaderComponent],
   templateUrl: './create-expense.component.html',
   styleUrls: ['./create-expense.component.css']
