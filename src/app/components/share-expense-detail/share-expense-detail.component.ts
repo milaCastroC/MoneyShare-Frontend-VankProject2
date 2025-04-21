@@ -4,6 +4,7 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { PayDebtModalComponent } from '../pay-debt-modal/pay-debt-modal.component';
 import { RegisterPaymentModalComponent } from '../register-payment-modal/register-payment-modal.component';
 import { AppHeaderComponent } from "../app-header/app-header.component";
+import { ShareService } from '../../services/share.service';
 
 interface SubExpense {
   id: number;
@@ -27,8 +28,8 @@ interface UserBalance {
   styleUrls: ['./share-expense-detail.component.css']
 })
 export class ShareExpenseDetailComponent implements OnInit {
-  shareExpenseName: string = 'Nombre del ShareExpense';
-  shareExpenseCode: string = 'FYUBI258135';
+  shareExpenseName: string = '';
+  shareExpenseCode: string = '';
   totalAmount: number = 1000000;
   paidAmount: number = 200000;
   activeTab: 'subgastos' | 'balance' = 'subgastos';
@@ -55,16 +56,27 @@ export class ShareExpenseDetailComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private shareService: ShareService
   ) { }
 
   ngOnInit(): void {
-    // Aquí se cargarían los datos del ShareExpense desde un servicio
-    // usando el ID que vendría en la URL
     const id = this.route.snapshot.paramMap.get('id');
-    console.log('ShareExpense ID:', id);
-    
-    // Verificar si hay un parámetro de tab en la URL
+    if (id) {
+      this.shareService.findShareById(id)
+        .then((res: any) => {
+          this.shareExpenseName = res.data.name;
+          this.shareExpenseCode = res.data.code;
+        })
+        .catch(err => {
+          console.error('Error al obtener el share:', err);
+          if (err.response) {
+            console.error('Status:', err.response.status);
+            console.error('Mensaje del servidor:', err.response.data);
+          }
+        });
+    }
+
     const tab = this.route.snapshot.queryParamMap.get('tab');
     if (tab === 'balance') {
       this.activeTab = 'balance';

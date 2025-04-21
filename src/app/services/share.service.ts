@@ -23,4 +23,9 @@ export class ShareService {
   findShareByCode(code: any) {
     return this.api.get(`/share/find/code/${code}`);
   }
+
+  findShareById(id: any) {
+    return this.api.get(`/share/find/${id}`);
+  }
+  
 }
