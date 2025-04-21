@@ -14,5 +14,9 @@ export class UsuarioService {
   registerUsuario(user: any) {
     return this.api.post('user/register', user);
   }
+
+  getUsuarioById(id: string) {
+    return this.api.get(`/user/${id}`);
+  }
   
 }

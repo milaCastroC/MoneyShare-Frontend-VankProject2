@@ -5,6 +5,8 @@ import { PayDebtModalComponent } from '../pay-debt-modal/pay-debt-modal.componen
 import { RegisterPaymentModalComponent } from '../register-payment-modal/register-payment-modal.component';
 import { AppHeaderComponent } from "../app-header/app-header.component";
 import { ShareService } from '../../services/share.service';
+import { ExpenseService } from '../../services/expense.service';
+import { UsuarioService } from '../../services/usuario.service';
 
 interface SubExpense {
   id: number;
@@ -35,11 +37,7 @@ export class ShareExpenseDetailComponent implements OnInit {
   activeTab: 'subgastos' | 'balance' = 'subgastos';
   
   // Datos para la pestaña de subgastos
-  subExpenses: SubExpense[] = [
-    { id: 1, category: 'Restaurantes y comida', amount: 500000, paidBy: 'Fulanito' },
-    { id: 2, category: 'Hotel', amount: 300000, paidBy: 'Juancho' },
-    { id: 3, category: 'Transporte', amount: 200000, paidBy: 'Juanita' }
-  ];
+  subExpenses: SubExpense[] = [];
 
   // Datos para la pestaña de balance
   youOwe: number = 20000;
@@ -57,7 +55,9 @@ export class ShareExpenseDetailComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private shareService: ShareService
+    private shareService: ShareService,
+    private expenseService: ExpenseService,
+    private usuarioService: UsuarioService
   ) { }
 
   ngOnInit(): void {
@@ -75,6 +75,21 @@ export class ShareExpenseDetailComponent implements OnInit {
             console.error('Mensaje del servidor:', err.response.data);
           }
         });
+
+        this.expenseService.getExpensesByShareId(id)
+          .then((res: any) => {
+            console.log('Respuesta de expenses:', res);
+            this.subExpenses = res.data.map((expense: any) => ({
+              id: expense.id,
+              category: expense.category,
+              amount: expense.amount,
+              paidBy: this.usuarioService.getUsuarioById(expense.userId) // o como venga del backend
+            }));
+            console.log('SubExpenses procesados:', this.subExpenses);
+          })
+          .catch(err => {
+            console.error('Error al obtener los gastos:', err);
+          });
     }
 
     const tab = this.route.snapshot.queryParamMap.get('tab');
