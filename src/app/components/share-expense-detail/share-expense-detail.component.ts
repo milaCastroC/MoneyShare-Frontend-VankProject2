@@ -7,6 +7,7 @@ import { AppHeaderComponent } from "../app-header/app-header.component";
 import { ShareService } from '../../services/share.service';
 import { ExpenseService } from '../../services/expense.service';
 import { UsuarioService } from '../../services/usuario.service';
+import { ShareMember } from '../../models/share-member.model';
 
 interface SubExpense {
   id: number;
@@ -14,7 +15,7 @@ interface SubExpense {
   description: string;
   amount: number;
   paidBy?: string;
-  userId?: number; 
+  userId?: number;
 }
 
 interface UserBalance {
@@ -41,13 +42,17 @@ export class ShareExpenseDetailComponent implements OnInit {
   subExpenses: SubExpense[] = [];
 
   // Datos para la pestaña de balance
-  youOwe: number = 20000;
-  theyOweYou: number = 20000;
+
+  youOwe: number = 0;
+  theyOweYou: number = 0;
+  userBalances: ShareMember[] = [];
+
+  /** 
   userBalances: UserBalance[] = [
     { id: 1, name: 'Fulanito', balance: 200000 },
     { id: 2, name: 'Juanita', balance: -28900 },
     { id: 3, name: 'Juancho', balance: -15500 }
-  ];
+  ];*/
 
   // Estado de los modales
   showPayDebtModal: boolean = false;
@@ -68,6 +73,11 @@ export class ShareExpenseDetailComponent implements OnInit {
         .then((res: any) => {
           this.shareExpenseName = res.data.name;
           this.shareExpenseCode = res.data.code;
+          this.getUserBalances(parseInt(id));
+          console.log(this.userBalances);
+          this.userBalances.forEach(user => {
+            console.log(user.balance);
+          });
         })
         .catch(err => {
           console.error('Error al obtener el share:', err);
@@ -77,33 +87,42 @@ export class ShareExpenseDetailComponent implements OnInit {
           }
         });
 
-        this.expenseService.getExpensesByShareId(id)
-          .then((res: any) => {
-            console.log('Respuesta de expenses:', res);
-            
-            this.subExpenses = res.data.map((expense: any) => ({
-              id: expense.id_expense,
-              description: expense.description,
-              category: expense.category,
-              amount: expense.amount,
-              userId: expense.id_user
-            }));
+      this.expenseService.getExpensesByShareId(id)
+        .then((res: any) => {
+          console.log('Respuesta de expenses:', res);
 
-            this.subExpenses.forEach(expense => {
-              if (expense.userId) {
-                this.getUsername(expense);
-              }
-            });
-            console.log('SubExpenses procesados:', this.subExpenses);
-          })
-          .catch(err => {
-            console.error('Error al obtener los gastos:', err);
+          this.subExpenses = res.data.map((expense: any) => ({
+            id: expense.id_expense,
+            description: expense.description,
+            category: expense.category,
+            amount: expense.amount,
+            userId: expense.id_user
+          }));
+
+          this.subExpenses.forEach(expense => {
+            if (expense.userId) {
+              this.getUsername(expense);
+            }
           });
+          console.log('SubExpenses procesados:', this.subExpenses);
+        })
+        .catch(err => {
+          console.error('Error al obtener los gastos:', err);
+        });
     }
+
 
     const tab = this.route.snapshot.queryParamMap.get('tab');
     if (tab === 'balance') {
       this.activeTab = 'balance';
+    }
+  }
+
+  setOwnBalance(userBalance: ShareMember) {
+    if (userBalance.balance < 0) {
+      this.youOwe = userBalance.balance;
+    } else {
+      this.theyOweYou = userBalance.balance;
     }
   }
 
@@ -121,11 +140,27 @@ export class ShareExpenseDetailComponent implements OnInit {
   }
 
   formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('es-CO', { 
-      style: 'currency', 
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
       currency: 'COP',
-      maximumFractionDigits: 0 
+      maximumFractionDigits: 0
     }).format(amount);
+  }
+
+  getUserBalances(idShare: number) {
+    this.shareService.findShareMemebers(idShare)
+      .then((response: any) => {
+        this.userBalances = response.data;
+        console.log(response.data);
+        this.userBalances.forEach(user => {
+          if(user.email_user === this.usuarioService.getTokenInfo().email){
+            this.setOwnBalance(user);
+          }
+        });
+      })
+      .catch((error: any) => {
+        console.error('Error getting user balances:', error);
+      });
   }
 
   copyCode(): void {
@@ -163,24 +198,24 @@ export class ShareExpenseDetailComponent implements OnInit {
     this.showPayDebtModal = false;
   }
 
-  handlePaymentConfirmed(paymentData: {userId: number, amount: number}): void {
+  handlePaymentConfirmed(paymentData: { userId: number, amount: number }): void {
     console.log('Pago confirmado:', paymentData);
-    
+
     // Aquí se implementaría la lógica para procesar el pago
     // Por ejemplo, actualizar el balance del usuario y reducir la deuda
-    
+
     // Cerrar el modal después de procesar el pago
     this.showPayDebtModal = false;
-    
+
     // Mostrar un mensaje de confirmación
     alert(`Pago de ${this.formatCurrency(paymentData.amount)} realizado con éxito`);
-    
+
     // Actualizar los datos (simulación)
     this.youOwe -= paymentData.amount;
     if (this.youOwe < 0) this.youOwe = 0;
-    
+
     // Actualizar el balance del usuario que recibió el pago
-    const userIndex = this.userBalances.findIndex(user => user.id === paymentData.userId);
+    const userIndex = this.userBalances.findIndex(user => user.id_user === paymentData.userId);
     if (userIndex !== -1) {
       this.userBalances[userIndex].balance += paymentData.amount;
     }
@@ -195,24 +230,24 @@ export class ShareExpenseDetailComponent implements OnInit {
     this.showRegisterPaymentModal = false;
   }
 
-  handlePaymentRegistered(paymentData: {userId: number, amount: number}): void {
+  handlePaymentRegistered(paymentData: { userId: number, amount: number }): void {
     console.log('Pago registrado:', paymentData);
-    
+
     // Aquí se implementaría la lógica para procesar el registro de pago
     // Por ejemplo, actualizar el balance del usuario y reducir lo que te deben
-    
+
     // Cerrar el modal después de procesar el registro
     this.showRegisterPaymentModal = false;
-    
+
     // Mostrar un mensaje de confirmación
     alert(`Pago de ${this.formatCurrency(paymentData.amount)} registrado con éxito`);
-    
+
     // Actualizar los datos (simulación)
     this.theyOweYou -= paymentData.amount;
     if (this.theyOweYou < 0) this.theyOweYou = 0;
-    
+
     // Actualizar el balance del usuario que realizó el pago
-    const userIndex = this.userBalances.findIndex(user => user.id === paymentData.userId);
+    const userIndex = this.userBalances.findIndex(user => user.id_user === paymentData.userId);
     if (userIndex !== -1) {
       this.userBalances[userIndex].balance += paymentData.amount;
     }
@@ -233,29 +268,29 @@ export class ShareExpenseDetailComponent implements OnInit {
   }
 
   // Obtener solo los usuarios con balance negativo (a quienes les debes)
-  getUsersYouOwe(): {id: number, name: string}[] {
+  getUsersYouOwe(): { id: number, name: string }[] {
     return this.userBalances
       .filter(user => user.balance > 0)
       .map(user => ({
-        id: user.id,
-        name: user.name
+        id: user.id_user,
+        name: user.username
       }));
   }
 
   // Obtener solo los usuarios con balance negativo (quienes te deben)
-  getUsersWhoOweYou(): {id: number, name: string}[] {
+  getUsersWhoOweYou(): { id: number, name: string }[] {
     return this.userBalances
       .filter(user => user.balance < 0)
       .map(user => ({
-        id: user.id,
-        name: user.name
+        id: user.id_user,
+        name: user.username
       }));
   }
 
   // Añadir este método al componente ShareExpenseDetailComponent
-editShareExpense(): void {
-  if (this.route.snapshot.paramMap.get('id')) {
-    this.router.navigate(['/edit-share-expense', this.route.snapshot.paramMap.get('id')]);
+  editShareExpense(): void {
+    if (this.route.snapshot.paramMap.get('id')) {
+      this.router.navigate(['/edit-share-expense', this.route.snapshot.paramMap.get('id')]);
+    }
   }
-}
 }

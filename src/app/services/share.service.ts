@@ -27,5 +27,9 @@ export class ShareService {
   findShareById(id: any) {
     return this.api.get(`/share/find/${id}`);
   }
+
+  findShareMemebers(idShare: number) {
+    return this.api.get(`/share/members/all/${idShare}`)
+  }
   
 }

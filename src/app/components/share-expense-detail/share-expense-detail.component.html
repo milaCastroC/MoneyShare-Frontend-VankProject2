@@ -82,17 +82,17 @@
         <div class="balances-container">
           <h3 class="balance-title">Balances</h3>
           
-          <!-- Sección de lo que debes -->
-          <div class="balance-row you-owe">
+          <!-- Sección de lo que debes (solo se muestra si el balance es negativo) -->
+          <div class="balance-row you-owe" *ngIf="youOwe < 0">
             <div class="balance-info">
               <h4>Debes</h4>
               <p class="balance-amount">{{ formatCurrency(youOwe) }}</p>
             </div>
-            <button class="action-btn pay-btn" (click)="payDebt()" [disabled]="youOwe <= 0">Pagar</button>
+            <button class="action-btn pay-btn" (click)="payDebt()" [disabled]="youOwe >= 0">Pagar</button>
           </div>
           
-          <!-- Sección de lo que te deben -->
-          <div class="balance-row they-owe">
+          <!-- Sección de lo que te deben (solo se muestra si el balance es positivo) -->
+          <div class="balance-row they-owe" *ngIf="theyOweYou > 0">
             <div class="balance-info">
               <h4>Te deben</h4>
               <p class="balance-amount">{{ formatCurrency(theyOweYou) }}</p>
@@ -107,7 +107,7 @@
                 <div class="user-avatar">
                   <span class="avatar-icon">👤</span>
                 </div>
-                <p class="user-name">{{ user.name }}</p>
+                <p class="user-name">{{ user.username }}</p>
               </div>
               <p class="user-balance" [ngClass]="{'positive': user.balance > 0, 'negative': user.balance < 0}">
                 {{ user.balance > 0 ? '+' : '' }}{{ formatCurrency(user.balance) }}
