@@ -32,11 +32,12 @@ interface UserBalance {
   templateUrl: './share-expense-detail.component.html',
   styleUrls: ['./share-expense-detail.component.css']
 })
+
 export class ShareExpenseDetailComponent implements OnInit {
   shareExpenseName: string = '';
   shareExpenseCode: string = '';
-  totalAmount: number = 1000000;
-  paidAmount: number = 200000;
+  totalAmount: number = 0;
+  paidAmount: number = 0;
   activeTab: 'subgastos' | 'balance' = 'subgastos';
   // Datos para la pestaña de subgastos
   subExpenses: SubExpense[] = [];
@@ -46,13 +47,6 @@ export class ShareExpenseDetailComponent implements OnInit {
   youOwe: number = 0;
   theyOweYou: number = 0;
   userBalances: ShareMember[] = [];
-
-  /** 
-  userBalances: UserBalance[] = [
-    { id: 1, name: 'Fulanito', balance: 200000 },
-    { id: 2, name: 'Juanita', balance: -28900 },
-    { id: 3, name: 'Juancho', balance: -15500 }
-  ];*/
 
   // Estado de los modales
   showPayDebtModal: boolean = false;
@@ -74,6 +68,8 @@ export class ShareExpenseDetailComponent implements OnInit {
           this.shareExpenseName = res.data.name;
           this.shareExpenseCode = res.data.code;
           this.getUserBalances(parseInt(id));
+          this.totalAmount = res.data.paid_amount;
+          this.calculateProgress();
           console.log(this.userBalances);
           this.userBalances.forEach(user => {
             console.log(user.balance);
@@ -105,6 +101,9 @@ export class ShareExpenseDetailComponent implements OnInit {
             }
           });
           console.log('SubExpenses procesados:', this.subExpenses);
+
+          //this.calculateTotalAmount();
+          console.log('Total Amount:', this.totalAmount);
         })
         .catch(err => {
           console.error('Error al obtener los gastos:', err);
@@ -157,6 +156,7 @@ export class ShareExpenseDetailComponent implements OnInit {
             this.setOwnBalance(user);
           }
         });
+        this.calculatedPaidAmount();
       })
       .catch((error: any) => {
         console.error('Error getting user balances:', error);
@@ -262,10 +262,31 @@ export class ShareExpenseDetailComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  calculateTotalAmount(): void{
+    this.totalAmount = this.subExpenses.reduce((total, expense) => total + expense.amount, 0);
+  }
+
+  calculatedPaidAmount(): void{
+    let totalPaid = 0;
+    let debt = 0;
+    this.userBalances
+    .forEach(user => {
+      totalPaid += Math.abs(user.paid);
+      if(user.balance < 0){
+        debt += Math.abs(user.balance);
+      }
+    });
+    this.paidAmount = totalPaid - debt;
+    };
+    // .filter(user => user.balance > 0)
+    // .reduce((sum, user) => sum + user.balance, 0);
+  
+
   calculateProgress(): number {
-    // Calcular el porcentaje de progreso
+    if(this.totalAmount === 0) return 100;
     return (this.paidAmount / this.totalAmount) * 100;
   }
+  
 
   // Obtener solo los usuarios con balance negativo (a quienes les debes)
   getUsersYouOwe(): { id: number, name: string }[] {
