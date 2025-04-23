@@ -20,6 +20,10 @@ export class UsuarioService {
     return this.api.get(`/user/${id}`);
   }
 
+  getUsuarioByEmail(email: string) {
+    return this.api.get(`/user/email/${email}`);
+  }
+
   getTokenInfo(): { token: string | null, isAuthenticated: boolean, email?: string } {
     const token = localStorage.getItem('token');
     if (!token) {

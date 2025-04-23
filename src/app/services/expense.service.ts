@@ -10,4 +10,8 @@ export class ExpenseService {
   getExpensesByShareId(shareId: string) {
     return this.api.get(`/expense/share/${shareId}`);
   }
+
+  createExpense(expense: any) {
+    return this.api.post(`expense/createExpense`, expense);
+  }
 }
