@@ -6,6 +6,7 @@ import { AppHeaderComponent } from "../app-header/app-header.component";
 import { ShareService } from '../../services/share.service';
 import { Share } from '../../models/share.model';
 import { ShareSplitService } from '../../services/share-split.service';
+import { UsuarioService } from '../../services/usuario.service';
 
 interface ShareAccount {
   id: number;
@@ -24,17 +25,22 @@ interface ShareAccount {
   styleUrl: './inicio.component.css'
 })
 export class InicioComponent implements OnInit {
-  userName: string = 'Fulanito';
+  userName: string = '';
 
   shareAccounts: ShareAccount[] = [];
 
   // Estado para controlar la visibilidad del modal
   showJoinShareModal: boolean = false;
 
-  constructor(private router: Router, private shareService: ShareService, private shareSplitService: ShareSplitService) { }
+  constructor(private router: Router,
+    private shareService: ShareService,
+    private shareSplitService: ShareSplitService,
+    private usuarioService: UsuarioService
+  ) { }
 
   ngOnInit(): void {
     this.loadUserShares();
+    this.loadUserData();
   }
 
   async loadUserShares(): Promise<void> {
@@ -114,4 +120,34 @@ export class InicioComponent implements OnInit {
     this.router.navigate(['/home']);
   }
 
+
+  // Método para cargar datos del usuario
+  loadUserData(): void {
+    try {
+      // Obtenemos la información del token
+      const tokenInfo = this.usuarioService.getTokenInfo();
+
+      if (tokenInfo.isAuthenticated && tokenInfo.email) {
+        // Si tenemos el email, intentamos obtener más datos del usuario
+        this.usuarioService.getUsuarioByEmail(tokenInfo.email)
+          .then((response: any) => {
+            if (response && response.data) {
+              // Asumiendo que la respuesta tiene un campo name o un campo similar
+              this.userName = response.data.name || response.data.username ||
+                (tokenInfo.email ? tokenInfo.email.split('@')[0] : 'Usuario');
+            } else {
+              // Si no hay datos específicos, usamos el email como nombre de usuario
+              this.userName = (tokenInfo.email ?? '').split('@')[0];
+            }
+          })
+          .catch(error => {
+            console.error('Error al obtener datos del usuario:', error);
+            // Usamos el email como alternativa si falla la petición
+            this.userName = (tokenInfo.email ?? '').split('@')[0];
+          });
+      }
+    } catch (error) {
+      console.error('Error cargando datos del usuario:', error);
+    }
+  }
 }
