@@ -1,0 +1,42 @@
+<div class="chatbox-container">
+    <div class="chatbox-header">
+      <h3 class="chatbox-title">Asistente MoneyShare</h3>
+      <button class="close-btn" (click)="closeChat()">✕</button>
+    </div>
+    
+    <div class="chat-messages">
+      <div 
+        *ngFor="let message of messages" 
+        class="message" 
+        [class.user-message]="message.isUser"
+        [class.bot-message]="!message.isUser"
+      >
+        <div class="message-content">{{ message.content }}</div>
+        <div class="message-time">
+          {{ message.timestamp | date:'shortTime' }}
+        </div>
+      </div>
+      
+      <div *ngIf="isLoading" class="loading-indicator">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+    
+    <div class="chat-input">
+      <input 
+        type="text" 
+        [(ngModel)]="newMessage" 
+        placeholder="Escribe tu mensaje..." 
+        (keyup.enter)="sendMessage()"
+      >
+      <button 
+        class="send-btn" 
+        [disabled]="!newMessage.trim()" 
+        (click)="sendMessage()"
+      >
+        <span class="send-icon">➤</span>
+      </button>
+    </div>
+  </div>

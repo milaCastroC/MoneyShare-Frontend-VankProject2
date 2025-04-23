@@ -1,0 +1,18 @@
+<div class="chat-button-container">
+    <!-- Botón flotante de chat -->
+    <button 
+      class="chat-button" 
+      [class.active]="isChatOpen" 
+      (click)="toggleChat()" 
+      aria-label="Abrir chat con IA"
+    >
+      <span class="chat-icon" *ngIf="!isChatOpen">💬</span>
+      <span class="close-icon" *ngIf="isChatOpen">✕</span>
+    </button>
+    
+    <!-- Chatbox (se muestra cuando isChatOpen es true) -->
+    <app-chatbox 
+      *ngIf="isChatOpen" 
+      (close)="closeChat()"
+    ></app-chatbox>
+  </div>
