@@ -1,5 +1,6 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NotificationService } from '../../services/notification.service';
 
 // Definir la interfaz para las notificaciones
 export interface Notification {
@@ -18,68 +19,37 @@ export interface Notification {
   templateUrl: './notifications-panel.component.html',
   styleUrls: ['./notifications-panel.component.css']
 })
-export class NotificationsPanelComponent {
+export class NotificationsPanelComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   
-  // Datos estáticos de notificaciones
-  notifications: Notification[] = [
-    {
-      id: 1,
-      title: 'Nuevo gasto añadido',
-      message: 'Cena en grupo - $50.00. Revisa tu parte y paga fácilmente.',
-      timestamp: new Date(Date.now() - 3600000), // 1 hora atrás
-      read: false,
-      type: 'expense'
-    },
-    {
-      id: 2,
-      title: '¡Tu saldo se actualizó!',
-      message: 'Miguel acaba de pagarte $30.00.',
-      timestamp: new Date(Date.now() - 7200000), // 2 horas atrás
-      read: false,
-      type: 'payment'
-    },
-    {
-      id: 3,
-      title: 'María acaba de aportar $20.000',
-      message: 'a la meta \'Nuevo sofá 🛋️\': ¡Sigamos sumando!',
-      timestamp: new Date(Date.now() - 86400000), // 1 día atrás
-      read: true,
-      type: 'contribution'
-    },
-    {
-      id: 4,
-      title: 'Tiempo de ahorrar',
-      message: 'Aporta a tu meta \'Concierto 🎵\' y acércate a tu objetivo.',
-      timestamp: new Date(Date.now() - 172800000), // 2 días atrás
-      read: true,
-      type: 'goal'
-    },
-    {
-      id: 5,
-      title: 'Nuevo miembro en el grupo',
-      message: 'Carlos se ha unido al ShareExpense "Viaje Medellín".',
-      timestamp: new Date(Date.now() - 259200000), // 3 días atrás
-      read: true,
-      type: 'system'
-    },
-    {
-      id: 6,
-      title: 'Recordatorio de pago',
-      message: 'Tienes un pago pendiente de $45.000 en "Plata de Don Luis".',
-      timestamp: new Date(Date.now() - 345600000), // 4 días atrás
-      read: true,
-      type: 'expense'
-    },
-    {
-      id: 7,
-      title: 'Meta alcanzada',
-      message: '¡Felicidades! Has alcanzado tu meta "Vacaciones de verano".',
-      timestamp: new Date(Date.now() - 432000000), // 5 días atrás
-      read: true,
-      type: 'goal'
-    }
-  ];
+  notifications: Notification[] = [];
+  loading = false;
+  error = '';
+  
+  constructor(private notificationService: NotificationService) {}
+  
+  ngOnInit(): void {
+    this.loadNotifications();
+  }
+  
+  // Cargar notificaciones desde el backend
+  loadNotifications(): void {
+    this.loading = true;
+    this.notificationService.getNotifications().subscribe({
+      next: (response) => {
+        this.notifications = response.data.map(notification => ({
+          ...notification,
+          timestamp: new Date(notification.timestamp) // Convertir string a Date
+        }));
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar notificaciones:', err);
+        this.error = 'No se pudieron cargar las notificaciones';
+        this.loading = false;
+      }
+    });
+  }
   
   // Contador de notificaciones no leídas
   get unreadCount(): number {
@@ -92,13 +62,52 @@ export class NotificationsPanelComponent {
   
   markAsRead(notification: Notification): void {
     if (!notification.read) {
-      notification.read = true;
+      this.notificationService.markAsRead(notification.id.toString()).subscribe({
+        next: () => {
+          notification.read = true;
+        },
+        error: (err) => {
+          console.error('Error al marcar como leída:', err);
+        }
+      });
     }
   }
   
   markAllAsRead(): void {
-    this.notifications.forEach(notification => {
-      notification.read = true;
+    this.notificationService.markAllAsRead().subscribe({
+      next: () => {
+        this.notifications.forEach(notification => {
+          notification.read = true;
+        });
+      },
+      error: (err) => {
+        console.error('Error al marcar todas como leídas:', err);
+      }
+    });
+  }
+  
+  deleteNotification(event: Event, notification: Notification): void {
+    // Detener la propagación para evitar que el click llegue al contenedor
+    event.stopPropagation();
+    
+    this.notificationService.deleteNotification(notification.id.toString()).subscribe({
+      next: () => {
+        this.notifications = this.notifications.filter(n => n.id !== notification.id);
+      },
+      error: (err) => {
+        console.error('Error al eliminar notificación:', err);
+      }
+    });
+  }
+  
+  deleteAllNotifications(): void {
+    this.notificationService.deleteAllNotifications().subscribe({
+      next: () => {
+        this.notifications = [];
+      },
+      error: (err) => {
+        console.error('Error al eliminar todas las notificaciones:', err);
+      }
     });
   }
   
