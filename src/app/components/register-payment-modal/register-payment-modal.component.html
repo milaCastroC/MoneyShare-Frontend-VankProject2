@@ -1,46 +1,40 @@
 <div class="modal-overlay">
-    <div class="modal-container">
-      <button class="close-btn" (click)="closeModal()">✕</button>
-      
-      <h2 class="modal-title">Te deben {{ formatCurrency(totalOwed) }}</h2>
-      
-      <div class="modal-content">
-        <div class="form-group">
-          <label for="paidBy">¿Quién te pagó?</label>
-          <div class="select-container">
-            <select 
-              id="paidBy" 
-              class="form-control" 
-              [value]="selectedUserId || ''" 
-              (change)="onUserChange($event)"
-            >
-              <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
-            </select>
-            <div class="select-arrow">▼</div>
-          </div>
+  <div class="modal-container">
+    <button class="close-btn" (click)="closeModal()">✕</button>
+
+    <h2 class="modal-title">Te deben {{ formatCurrency(totalOwed) }}</h2>
+
+    <div class="modal-content">
+      <div class="form-group">
+        <label for="paidBy">¿Quién te pagó?</label>
+        <div class="select-container">
+
+          <select id="payTo" class="form-control" 
+          [(ngModel)]="selectedUser" 
+          (ngModelChange)="onUserSelected($event)">
+
+            <option [ngValue]="null" disabled selected>Selecciona un usuario</option>
+            <option *ngFor="let user of users" [ngValue]="user">{{ user.username }}</option>
+          </select>
+
+          <div class="select-arrow">▼</div>
         </div>
-        
-        <div class="form-group">
-          <label for="amount">Monto:</label>
-          <div class="amount-container">
-            <input 
-              type="number" 
-              id="amount" 
-              class="form-control" 
-              [value]="paymentAmount" 
-              (input)="onAmountChange($event)" 
-              min="1" 
-              [max]="maxAmount"
-            />
-            <span class="amount-separator">/</span>
-            <span class="max-amount">{{ formatCurrency(maxAmount) }}</span>
-          </div>
-        </div>
-        
-        <button class="confirm-btn" (click)="confirmPayment()">
-          Marcar como pagado<br>
-          <span class="btn-subtitle">(Pago en efectivo)</span>
-        </button>
       </div>
+
+      <div class="form-group">
+        <label for="amount">Monto:</label>
+        <div class="amount-container">
+          <input type="number" id="amount" class="form-control" [value]="paymentAmount" (input)="onAmountChange($event)"
+            min="1" [max]="maxAmount" />
+          <span class="amount-separator">/</span>
+          <span class="max-amount">{{ formatCurrency(maxAmount) }}</span>
+        </div>
+      </div>
+
+      <button class="confirm-btn" (click)="confirmPayment()">
+        Marcar como pagado<br>
+        <span class="btn-subtitle">(Pago en efectivo)</span>
+      </button>
     </div>
   </div>
+</div>

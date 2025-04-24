@@ -106,7 +106,6 @@ export class ShareExpenseDetailComponent implements OnInit {
           });
           console.log('SubExpenses procesados:', this.subExpenses);
 
-          //this.calculateTotalAmount();
           console.log('Total Amount:', this.totalAmount);
         })
         .catch(err => {
@@ -215,26 +214,11 @@ export class ShareExpenseDetailComponent implements OnInit {
   }
 
   handlePaymentRegistered(paymentData: { userId: number, amount: number }): void {
-    console.log('Pago registrado:', paymentData);
+    this.closeRegisterPaymentModal();
+    this.getShareData(this.route.snapshot.paramMap.get('id')!);
 
-    // Aquí se implementaría la lógica para procesar el registro de pago
-    // Por ejemplo, actualizar el balance del usuario y reducir lo que te deben
-
-    // Cerrar el modal después de procesar el registro
-    this.showRegisterPaymentModal = false;
-
-    // Mostrar un mensaje de confirmación
     alert(`Pago de ${this.formatCurrency(paymentData.amount)} registrado con éxito`);
 
-    // Actualizar los datos (simulación)
-    this.theyOweYou -= paymentData.amount;
-    if (this.theyOweYou < 0) this.theyOweYou = 0;
-
-    // Actualizar el balance del usuario que realizó el pago
-    const userIndex = this.userBalances.findIndex(user => user.id_user === paymentData.userId);
-    if (userIndex !== -1) {
-      this.userBalances[userIndex].balance += paymentData.amount;
-    }
   }
 
   goBack(): void {
@@ -273,23 +257,13 @@ export class ShareExpenseDetailComponent implements OnInit {
   
 
   // Obtener solo los usuarios con balance negativo (a quienes les debes)
-  getUsersYouOwe(): { id: number, name: string }[] {
-    return this.userBalances
-      .filter(user => user.balance > 0)
-      .map(user => ({
-        id: user.id_user,
-        name: user.username
-      }));
+  getUsersYouOwe():ShareMember[] {
+    return this.userBalances.filter(user => user.balance > 0);
   }
 
   // Obtener solo los usuarios con balance negativo (quienes te deben)
-  getUsersWhoOweYou(): { id: number, name: string }[] {
-    return this.userBalances
-      .filter(user => user.balance < 0)
-      .map(user => ({
-        id: user.id_user,
-        name: user.username
-      }));
+  getUsersWhoOweYou():ShareMember[] {
+    return this.userBalances.filter(user => user.balance < 0);
   }
 
   // Añadir este método al componente ShareExpenseDetailComponent
