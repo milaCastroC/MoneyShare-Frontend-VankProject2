@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Share } from '../models/share.model';
+import { Payment } from '../models/payment.model';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +31,10 @@ export class ShareService {
 
   findShareMemebers(idShare: number) {
     return this.api.get(`/share/members/all/${idShare}`)
+  }
+
+  makePayment(payment: Payment) {
+    return this.api.patch('/share/payment', payment);
   }
   
 }

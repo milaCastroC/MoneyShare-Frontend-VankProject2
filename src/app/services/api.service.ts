@@ -45,4 +45,8 @@ export class ApiService {
     return this.axiosInstance.delete<T>(url, config).then(res => res.data);
   }
 
+  patch<T>(url: string, body: any, config?: AxiosRequestConfig) {
+    return this.axiosInstance.patch<T>(url, body, config).then(res => res.data);
+  }
+
 }

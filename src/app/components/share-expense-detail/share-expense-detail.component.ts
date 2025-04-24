@@ -18,13 +18,6 @@ interface SubExpense {
   userId?: number;
 }
 
-interface UserBalance {
-  id: number;
-  name: string;
-  balance: number;
-  avatar?: string;
-}
-
 @Component({
   selector: 'app-share-expense-detail',
   standalone: true,
@@ -63,7 +56,18 @@ export class ShareExpenseDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.shareService.findShareById(id)
+      this.getShareData(id);
+    }
+
+
+    const tab = this.route.snapshot.queryParamMap.get('tab');
+    if (tab === 'balance') {
+      this.activeTab = 'balance';
+    }
+  }
+
+  getShareData(id: string){
+    this.shareService.findShareById(id)
         .then((res: any) => {
           this.shareExpenseName = res.data.name;
           this.shareExpenseCode = res.data.code;
@@ -108,13 +112,8 @@ export class ShareExpenseDetailComponent implements OnInit {
         .catch(err => {
           console.error('Error al obtener los gastos:', err);
         });
-    }
-
-
-    const tab = this.route.snapshot.queryParamMap.get('tab');
-    if (tab === 'balance') {
-      this.activeTab = 'balance';
-    }
+        console.log('Holi');
+        
   }
 
   setOwnBalance(userBalance: ShareMember) {
@@ -199,26 +198,11 @@ export class ShareExpenseDetailComponent implements OnInit {
   }
 
   handlePaymentConfirmed(paymentData: { userId: number, amount: number }): void {
-    console.log('Pago confirmado:', paymentData);
-
-    // Aquí se implementaría la lógica para procesar el pago
-    // Por ejemplo, actualizar el balance del usuario y reducir la deuda
-
-    // Cerrar el modal después de procesar el pago
-    this.showPayDebtModal = false;
-
-    // Mostrar un mensaje de confirmación
+    this.closePayDebtModal();
+    this.getShareData(this.route.snapshot.paramMap.get('id')!);
+    console.log(this.route.snapshot.paramMap.get('id')!);
+    
     alert(`Pago de ${this.formatCurrency(paymentData.amount)} realizado con éxito`);
-
-    // Actualizar los datos (simulación)
-    this.youOwe -= paymentData.amount;
-    if (this.youOwe < 0) this.youOwe = 0;
-
-    // Actualizar el balance del usuario que recibió el pago
-    const userIndex = this.userBalances.findIndex(user => user.id_user === paymentData.userId);
-    if (userIndex !== -1) {
-      this.userBalances[userIndex].balance += paymentData.amount;
-    }
   }
 
   registerPayment(): void {
