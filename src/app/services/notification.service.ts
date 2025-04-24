@@ -1,37 +1,33 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../enviroments/enviroment';
-import { Notification } from '../components/notifications-panel/notifications-panel.component';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  private apiUrl = `${environment.apiUrl}/notifications`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private api: ApiService) { }
 
-  // Obtener todas las notificaciones del usuario actual
-  getNotifications(): Observable<{data: Notification[]}> {
-    return this.http.get<{data: Notification[]}>(`${this.apiUrl}/find/all`);
+  getAllNotificationByUser(){
+    return this.api.get(`/notification/find/all`);
   }
 
-  // Obtener una notificación específica
-  getNotificationById(id: string): Observable<{data: Notification}> {
-    return this.http.get<{data: Notification}>(`${this.apiUrl}/find/${id}`);
+  getNotificationById(id: number){
+    return this.api.get(`/notification/find/${id}`);
   }
 
-  // Eliminar una notificación
-  deleteNotification(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/delete/${id}`);
+  deleteNotification(id: number){
+    return this.api.delete(`/notification/delete/${id}`);
   }
 
-  // Eliminar todas las notificaciones
-  deleteAllNotifications(): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/all`);
+  deleteAllNotifications(){
+    return this.api.delete(`/notification/all`);
   }
 
+  createWelcomeNotification(){
+    return this.api.post(`/notification/welcome`);
+  }
+  /** 
   // Marcar una notificación como leída
   markAsRead(id: string): Observable<any> {
     // Nota: Este endpoint no existe aún en el backend, necesitarás agregarlo
@@ -43,4 +39,5 @@ export class NotificationService {
     // Nota: Este endpoint no existe aún en el backend, necesitarás agregarlo
     return this.http.patch(`${this.apiUrl}/read/all`, {});
   }
+  */
 }

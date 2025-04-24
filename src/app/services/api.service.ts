@@ -33,7 +33,7 @@ export class ApiService {
     return this.axiosInstance.get<T>(url, { ...config, params }).then(res => res.data);
   }
 
-  post<T>(url: string, body: any, config?: AxiosRequestConfig) {
+  post<T>(url: string, body?: any, config?: AxiosRequestConfig) {
     return this.axiosInstance.post<T>(url, body, config).then(res => res.data);
   }
 

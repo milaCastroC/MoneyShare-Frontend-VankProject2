@@ -42,9 +42,8 @@
           <span>{{ getNotificationIcon(notification.type) }}</span>
         </div>
         <div class="notification-content">
-          <h3 class="notification-title">{{ notification.title }}</h3>
-          <p class="notification-message">{{ notification.message }}</p>
-          <span class="notification-time">{{ getTimeAgo(notification.timestamp) }}</span>
+            <p class="notification-message">{{ notification.message }}</p>
+          <!-- <span class="notification-time">{{ getTimeAgo(notification.date) }}</span> -->
         </div>
         <button 
           class="delete-btn" 

@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { User } from '../../models/user.model';
 import { UsuarioService } from '../../services/usuario.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-register',
@@ -21,6 +22,7 @@ export class RegisterComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private usuarioService: UsuarioService,
+    private notificationService: NotificationService,
     private router: Router
   ) { }
 
@@ -78,6 +80,7 @@ export class RegisterComponent implements OnInit {
     this.usuarioService.registerUsuario(user)
       .then((response: any) => {
         console.log('registro exitoso:', response);
+        //this.notificationService.createWelcomeNotification()
         this.router.navigate(['/login']);
       })
       .catch(error => {

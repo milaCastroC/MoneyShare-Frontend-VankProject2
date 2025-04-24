@@ -1,17 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../services/notification.service';
-
-// Definir la interfaz para las notificaciones
-export interface Notification {
-  id: number;
-  title: string;
-  message: string;
-  timestamp: Date;
-  read: boolean;
-  type: 'expense' | 'payment' | 'contribution' | 'goal' | 'system';
-}
-
+import { Notification } from '../../models/notification.model';
 @Component({
   selector: 'app-notifications-panel',
   standalone: true,
@@ -35,19 +25,13 @@ export class NotificationsPanelComponent implements OnInit {
   // Cargar notificaciones desde el backend
   loadNotifications(): void {
     this.loading = true;
-    this.notificationService.getNotifications().subscribe({
-      next: (response) => {
-        this.notifications = response.data.map(notification => ({
-          ...notification,
-          timestamp: new Date(notification.timestamp) // Convertir string a Date
-        }));
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error al cargar notificaciones:', err);
-        this.error = 'No se pudieron cargar las notificaciones';
-        this.loading = false;
-      }
+    this.notificationService.getAllNotificationByUser()
+    .then((res: any) => {
+      this.notifications = res.data;
+      this.loading = false;
+    })
+    .catch((err: any) => {
+      console.error('Error al cargar notificaciones:', err);
     });
   }
   
@@ -61,6 +45,9 @@ export class NotificationsPanelComponent implements OnInit {
   }
   
   markAsRead(notification: Notification): void {
+    console.log('Faltan implementar');
+    
+    /*
     if (!notification.read) {
       this.notificationService.markAsRead(notification.id.toString()).subscribe({
         next: () => {
@@ -71,9 +58,13 @@ export class NotificationsPanelComponent implements OnInit {
         }
       });
     }
+    */
   }
   
   markAllAsRead(): void {
+    console.log('Faltan implementar');
+    
+    /*
     this.notificationService.markAllAsRead().subscribe({
       next: () => {
         this.notifications.forEach(notification => {
@@ -84,33 +75,30 @@ export class NotificationsPanelComponent implements OnInit {
         console.error('Error al marcar todas como leídas:', err);
       }
     });
+    */
   }
   
   deleteNotification(event: Event, notification: Notification): void {
-    // Detener la propagación para evitar que el click llegue al contenedor
-    event.stopPropagation();
-    
-    this.notificationService.deleteNotification(notification.id.toString()).subscribe({
-      next: () => {
-        this.notifications = this.notifications.filter(n => n.id !== notification.id);
-      },
-      error: (err) => {
-        console.error('Error al eliminar notificación:', err);
-      }
+    this.notificationService.deleteNotification(notification.id_notification)
+    .then((res: any) => {
+      this.notifications = this.notifications.filter(n => n.id_notification !== notification.id_notification);
+    })
+    .catch((err: any) => {
+      console.error('Error al eliminar notificación:', err);
     });
   }
   
   deleteAllNotifications(): void {
-    this.notificationService.deleteAllNotifications().subscribe({
-      next: () => {
-        this.notifications = [];
-      },
-      error: (err) => {
-        console.error('Error al eliminar todas las notificaciones:', err);
-      }
+    this.notificationService.deleteAllNotifications()
+    .then((res: any) => {
+      this.notifications = [];
+    })
+    .catch((err: any) => {
+      console.error('Error al eliminar todas las notificaciones:', err);
     });
+    
   }
-  
+  /** 
   getTimeAgo(date: Date): string {
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
@@ -131,17 +119,18 @@ export class NotificationsPanelComponent implements OnInit {
       return date.toLocaleDateString();
     }
   }
+  */
   
   getNotificationIcon(type: string): string {
     switch (type) {
-      case 'expense':
-        return '💰';
       case 'payment':
         return '💵';
-      case 'contribution':
+      case 'debt':
         return '🎁';
       case 'goal':
         return '🎯';
+      case 'general':
+        return '📢';
       default:
         return '📢';
     }
