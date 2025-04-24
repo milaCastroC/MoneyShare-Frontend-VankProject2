@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule } from "@angular/forms"
+import { AiService } from "../../services/ai.service"
 
 interface ChatMessage {
   content: string
@@ -22,7 +23,7 @@ export class ChatboxComponent {
   newMessage = ""
   isLoading = false
 
-  constructor() {
+  constructor(private aiService: AiService) {
     // Mensaje de bienvenida al iniciar el chat
     this.addBotMessage("¡Hola! Soy el asistente de MoneyShare. ¿En qué puedo ayudarte hoy?")
   }
@@ -34,18 +35,24 @@ export class ChatboxComponent {
   sendMessage(): void {
     if (!this.newMessage.trim()) return
 
-    // Añadir mensaje del usuario
     this.addUserMessage(this.newMessage)
 
-    const userMessage = this.newMessage
+    const userMessage = this.newMessage;
+    
+    this.isLoading = true;
+    this.aiService.sendMessage(this.newMessage)
+    .then((response: any) => {
+      this.addBotMessage(response.message);
+      console.log('respuesta del bot:', response);
+    })
+    .catch(error => {
+      console.error('Error al enviar el mensaje:', error);
+    })
+    .finally(() => {
+      this.isLoading = false
+    });
     this.newMessage = "" // Limpiar el input
 
-    // Simular respuesta del bot
-    this.isLoading = true
-    setTimeout(() => {
-      this.respondToMessage(userMessage)
-      this.isLoading = false
-    }, 1000)
   }
 
   addUserMessage(content: string): void {
@@ -64,6 +71,7 @@ export class ChatboxComponent {
     })
   }
 
+  /** 
   respondToMessage(message: string): void {
     const lowerCaseMessage = message.toLowerCase()
 
@@ -88,5 +96,5 @@ export class ChatboxComponent {
         "Lo siento, no entiendo completamente tu pregunta. ¿Podrías reformularla o ser más específico sobre lo que necesitas ayuda con MoneyShare?",
       )
     }
-  }
+  }*/
 }

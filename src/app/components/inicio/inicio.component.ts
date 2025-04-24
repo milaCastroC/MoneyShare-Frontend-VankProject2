@@ -7,6 +7,7 @@ import { ShareService } from '../../services/share.service';
 import { Share } from '../../models/share.model';
 import { ShareSplitService } from '../../services/share-split.service';
 import { UsuarioService } from '../../services/usuario.service';
+import { AiService } from '../../services/ai.service';
 
 interface ShareAccount {
   id: number;
@@ -35,12 +36,14 @@ export class InicioComponent implements OnInit {
   constructor(private router: Router,
     private shareService: ShareService,
     private shareSplitService: ShareSplitService,
+    private aiService: AiService,
     private usuarioService: UsuarioService
   ) { }
 
   ngOnInit(): void {
     this.loadUserShares();
     this.loadUserData();
+    this.aiService.deleteHistory();
   }
 
   async loadUserShares(): Promise<void> {

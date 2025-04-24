@@ -11,7 +11,7 @@
         [class.user-message]="message.isUser"
         [class.bot-message]="!message.isUser"
       >
-        <div class="message-content">{{ message.content }}</div>
+        <div class="message-content" [innerHTML]="message.content"></div>
         <div class="message-time">
           {{ message.timestamp | date:'shortTime' }}
         </div>
