@@ -9,7 +9,7 @@
         <span class="back-icon">←</span> Volver
       </button>
       
-      <h2 class="form-title">Editar ShareExpense</h2>
+      <h2 class="form-title">{{ editModeAvailable ? 'Editar' : 'Ver' }} ShareExpense</h2>
       
       <div class="form-group">
         <label for="shareName">Nombre:</label>
@@ -19,6 +19,7 @@
           class="form-control" 
           [(ngModel)]="shareName" 
           placeholder="Ingresa el nombre del ShareExpense"
+          [disabled]="!editModeAvailable"
         >
       </div>
       
@@ -30,6 +31,7 @@
           [(ngModel)]="shareDescription" 
           placeholder="Ingresa una descripción para el ShareExpense"
           rows="4"
+          [disabled]="!editModeAvailable"
         ></textarea>
       </div>
       
@@ -48,8 +50,8 @@
             <div class="participant-percentage">
               <!-- Modo de visualización -->
               <div *ngIf="!participant.isEditing" class="percentage-display">
-                <span class="percentage-badge" (click)="startEditingPercentage(participant)">
-                  {{ formatPercentage(participant.percentage) }}
+                <span class="percentage-badge" [class.read-only]="!editModeAvailable" (click)="editModeAvailable && startEditingPercentage(participant)">
+                  {{ formatPercentage(participant.percentage)}}
                 </span>
                 <span class="amount-badge">{{ formatCurrency(participant.amount_to_pay) }}</span>
               </div>
@@ -65,6 +67,7 @@
                     min="0.001" 
                     max="100" 
                     step="0.001"
+                    [disabled]="!editModeAvailable"
                   >
                   <span class="percentage-symbol">%</span>
                 </div>
@@ -82,7 +85,7 @@
         </div>
       </div>
       
-      <div class="form-actions">
+      <div class="form-actions" *ngIf="editModeAvailable">
         <button class="save-btn" (click)="saveChanges()">Guardar cambios</button>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppHeaderComponent } from "../app-header/app-header.component";
 import { ShareMember } from '../../models/share-member.model';
 import { ShareService } from '../../services/share.service';
+import { UsuarioService } from '../../services/usuario.service';
 
 interface ShareParticipant extends ShareMember {
   isEditing: boolean;
@@ -24,10 +25,13 @@ export class EditShareExpenseComponent implements OnInit {
   totalAmount: number = 0;
   participants: ShareParticipant[] = [];
   percentageChange: boolean = false;
+  isAdmin: boolean = false;
+  editModeAvailable: boolean = false;
 
   constructor(
     private router: Router,
     private shareService: ShareService,
+    private usuarioService: UsuarioService,
     private route: ActivatedRoute
   ) { }
 
@@ -44,12 +48,29 @@ export class EditShareExpenseComponent implements OnInit {
     }
   }
 
+  
+  disableEditMode(adminId: number) {
+    const userEmail = this.usuarioService.getTokenInfo().email;
+    if (userEmail) {
+      this.usuarioService.getUsuarioByEmail(userEmail)
+        .then((res: any) => {
+          if (res.data.id_user === adminId) {
+            this.editModeAvailable = true;
+          } else {
+            this.editModeAvailable = false;
+          }
+        });
+    } 
+  
+  }
+
   getShareData(id: string) {
     this.shareService.findShareById(id)
       .then((res: any) => {
         this.totalAmount = res.data.paid_amount;
         this.shareName = res.data.name;
         this.shareDescription = res.data.description;
+        this.disableEditMode(res.data.id_creator);
       })
       .catch((err: any) => {
         console.error('Error al obtener los datos del ShareExpense:', err);

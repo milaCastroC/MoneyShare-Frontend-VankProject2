@@ -31,6 +31,7 @@ export class ShareExpenseDetailComponent implements OnInit {
   shareExpenseCode: string = '';
   totalAmount: number = 0;
   paidAmount: number = 0;
+  buttonEditMessage: string = '';
   activeTab: 'subgastos' | 'balance' = 'subgastos';
   // Datos para la pestaña de subgastos
   subExpenses: SubExpense[] = [];
@@ -66,6 +67,23 @@ export class ShareExpenseDetailComponent implements OnInit {
     }
   }
 
+  showEditButton(adminId: number) {
+    const userEmail = this.usuarioService.getTokenInfo().email;
+    if (userEmail) {
+      this.usuarioService.getUsuarioByEmail(userEmail)
+        .then((res: any) => {
+          if (res.data.id_user === adminId) {
+            this.buttonEditMessage = '✎ Editar';
+          } else {
+            this.buttonEditMessage = '🛈 Info';
+          }
+        });
+    } else {
+      this.buttonEditMessage = '🛈 Info';
+    }
+  
+  }
+
   getShareData(id: string){
     this.shareService.findShareById(id)
         .then((res: any) => {
@@ -74,7 +92,7 @@ export class ShareExpenseDetailComponent implements OnInit {
           this.getUserBalances(parseInt(id));
           this.totalAmount = res.data.paid_amount;
           this.calculateProgress();
-          console.log(this.userBalances);
+          this.showEditButton(res.data.id_creator);
           this.userBalances.forEach(user => {
             console.log(user.balance);
           });
