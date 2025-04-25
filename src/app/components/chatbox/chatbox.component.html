@@ -4,12 +4,14 @@
       <button class="close-btn" (click)="closeChat()">✕</button>
     </div>
     
-    <div class="chat-messages">
+    <div class="chat-messages" #messagesContainer>
       <div 
-        *ngFor="let message of messages" 
+        *ngFor="let message of messages; let last = last" 
         class="message" 
         [class.user-message]="message.isUser"
         [class.bot-message]="!message.isUser"
+        #messageElement
+        [class.last-message]="last"
       >
         <div class="message-content" [innerHTML]="message.content"></div>
         <div class="message-time">

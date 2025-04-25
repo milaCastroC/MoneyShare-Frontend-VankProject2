@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from "@angular/core"
+import { Component, EventEmitter, Output, ViewChild, ElementRef, AfterViewChecked } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule } from "@angular/forms"
 import { AiService } from "../../services/ai.service"
@@ -16,8 +16,10 @@ interface ChatMessage {
   templateUrl: "./chatbox.component.html",
   styleUrls: ["./chatbox.component.css"],
 })
-export class ChatboxComponent {
+export class ChatboxComponent implements AfterViewChecked {
   @Output() close = new EventEmitter<void>()
+  @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
+  @ViewChild('messageElement') private lastMessage!: ElementRef;
 
   messages: ChatMessage[] = []
   newMessage = ""
@@ -26,6 +28,18 @@ export class ChatboxComponent {
   constructor(private aiService: AiService) {
     // Mensaje de bienvenida al iniciar el chat
     this.addBotMessage("¡Hola! Soy el asistente de MoneyShare. ¿En qué puedo ayudarte hoy?")
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  private scrollToBottom(): void {
+    try {
+      this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight;
+    } catch(err) {
+      console.error('Error al hacer scroll:', err);
+    }
   }
 
   closeChat(): void {
@@ -60,7 +74,8 @@ export class ChatboxComponent {
       content,
       isUser: true,
       timestamp: new Date(),
-    })
+    });
+    this.scrollToBottom();
   }
 
   addBotMessage(content: string): void {
@@ -68,33 +83,8 @@ export class ChatboxComponent {
       content,
       isUser: false,
       timestamp: new Date(),
-    })
+    });
+    this.scrollToBottom();
   }
 
-  /** 
-  respondToMessage(message: string): void {
-    const lowerCaseMessage = message.toLowerCase()
-
-    if (lowerCaseMessage.includes("hola") || lowerCaseMessage.includes("saludos")) {
-      this.addBotMessage("¡Hola! ¿En qué puedo ayudarte con MoneyShare?")
-    } else if (lowerCaseMessage.includes("crear") && lowerCaseMessage.includes("gasto")) {
-      this.addBotMessage(
-        'Para crear un nuevo gasto, puedes hacer clic en el botón "Crear nuevo ShareAccount" en la página de inicio.',
-      )
-    } else if (lowerCaseMessage.includes("unir") && lowerCaseMessage.includes("código")) {
-      this.addBotMessage(
-        'Para unirte a un share con código, haz clic en "Unirse a un share por código" en la página de inicio y luego ingresa el código que te proporcionaron.',
-      )
-    } else if (lowerCaseMessage.includes("pagar") || lowerCaseMessage.includes("deuda")) {
-      this.addBotMessage(
-        'Para pagar una deuda, ve al detalle del ShareExpense, selecciona la pestaña "balance" y haz clic en el botón "Pagar".',
-      )
-    } else if (lowerCaseMessage.includes("gracias")) {
-      this.addBotMessage("¡De nada! Estoy aquí para ayudarte. ¿Hay algo más en lo que pueda asistirte?")
-    } else {
-      this.addBotMessage(
-        "Lo siento, no entiendo completamente tu pregunta. ¿Podrías reformularla o ser más específico sobre lo que necesitas ayuda con MoneyShare?",
-      )
-    }
-  }*/
 }
