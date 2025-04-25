@@ -59,7 +59,6 @@ export class CreateShareExpenseComponent implements OnInit{
   onSubmit(): void {
     if (this.shareExpenseForm.valid) {
 
-      console.log('Formulario enviado:', this.shareExpenseForm.value);
       const shareExpense: ShareExpenseData = {
         type: "share_expense",
         name: this.shareExpenseForm.value.name,
@@ -71,8 +70,7 @@ export class CreateShareExpenseComponent implements OnInit{
 
       this.shareService.createShare(shareExpense)
       .then((response: any) => {
-        console.log('registro exitoso:', response);
-        this.router.navigate(['/inicio']); // TODO: Redirigir al que acabó de crear
+        this.router.navigate(['/inicio']); 
       })
       .catch(error => {
         console.error('Error creando el share:', error);

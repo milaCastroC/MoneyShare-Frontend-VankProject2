@@ -42,7 +42,6 @@ export class EditShareExpenseComponent implements OnInit {
     if (this.shareExpenseId) {
       this.getShareData(this.shareExpenseId);
       this.getShareMembers(this.shareExpenseId);
-      console.log(this.participants);
     } else {
       this.router.navigate(['/home']);
     }
@@ -114,7 +113,6 @@ export class EditShareExpenseComponent implements OnInit {
   // Cancelar la edición de un porcentaje
   cancelEditingPercentage(participant: ShareParticipant): void {
     participant.isEditing = false;
-    console.log('Adios');
   }
 
   validatePercentageChange(): void {
@@ -146,7 +144,6 @@ export class EditShareExpenseComponent implements OnInit {
 
   // Guardar el nuevo porcentaje
   savePercentage(participant: ShareParticipant, newPercentageStr: string): void {
-    console.log('Hola');
     const newPercentage = parseFloat(newPercentageStr);
 
     if (isNaN(newPercentage) || newPercentage <= 0 || newPercentage > 100) {

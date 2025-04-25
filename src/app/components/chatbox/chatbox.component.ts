@@ -57,7 +57,6 @@ export class ChatboxComponent implements AfterViewChecked {
     this.aiService.sendMessage(this.newMessage)
     .then((response: any) => {
       this.addBotMessage(response.message);
-      console.log('respuesta del bot:', response);
     })
     .catch(error => {
       console.error('Error al enviar el mensaje:', error);

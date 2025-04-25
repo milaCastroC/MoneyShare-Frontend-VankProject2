@@ -27,7 +27,6 @@ expenseCategory: any;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    console.log('ShareExpense ID:', id);
   }
   
     createShare(): void {
@@ -49,7 +48,6 @@ expenseCategory: any;
 
     this.usuarioService.getUsuarioByEmail(userEmail) 
       .then((response: any) => {
-        console.log('Usuario logueado:', response.data);
         const userId = response.data.id_user;
 
         const expense: Expense = {

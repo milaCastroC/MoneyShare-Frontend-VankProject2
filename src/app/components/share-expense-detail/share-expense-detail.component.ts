@@ -160,7 +160,6 @@ export class ShareExpenseDetailComponent implements OnInit {
     this.shareService.findShareMemebers(idShare)
       .then((response: any) => {
         this.userBalances = response.data;
-        console.log(response.data);
         this.userBalances.forEach(user => {
           if(user.email_user === this.usuarioService.getTokenInfo().email){
             this.setOwnBalance(user);
@@ -194,8 +193,6 @@ export class ShareExpenseDetailComponent implements OnInit {
   }
 
   addSubExpense(): void {
-    // Aquí se implementaría la lógica para agregar un nuevo subgasto
-    console.log('Agregar subgasto');
     this.router.navigate(['/create-expense', this.route.snapshot.paramMap.get('id')]);
   }
 
@@ -211,13 +208,11 @@ export class ShareExpenseDetailComponent implements OnInit {
   handlePaymentConfirmed(paymentData: { userId: number, amount: number }): void {
     this.closePayDebtModal();
     this.getShareData(this.route.snapshot.paramMap.get('id')!);
-    console.log(this.route.snapshot.paramMap.get('id')!);
     
     alert(`Pago de ${this.formatCurrency(paymentData.amount)} realizado con éxito`);
   }
 
   registerPayment(): void {
-    // Abrir el modal de registro de pago
     this.showRegisterPaymentModal = true;
   }
 
@@ -238,7 +233,6 @@ export class ShareExpenseDetailComponent implements OnInit {
   }
 
   logout(): void {
-    // Implementar lógica de cierre de sesión
     this.router.navigate(['/login']);
   }
 
@@ -258,8 +252,7 @@ export class ShareExpenseDetailComponent implements OnInit {
     });
     this.paidAmount = totalPaid - debt;
     };
-    // .filter(user => user.balance > 0)
-    // .reduce((sum, user) => sum + user.balance, 0);
+
   
 
   calculateProgress(): number {

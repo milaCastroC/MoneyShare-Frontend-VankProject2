@@ -56,7 +56,6 @@ export class RegisterPaymentModalComponent implements OnInit {
 
     this.usuarioService.getUsuarioByEmail(userEmail) 
       .then((response: any) => {
-        console.log('Usuario logueado:', response.data);
         const userId = response.data.id_user;
         this.loggedUserId = userId;
       }).catch((error: any) => {
@@ -66,9 +65,7 @@ export class RegisterPaymentModalComponent implements OnInit {
 
   onUserSelected(user: ShareMember): void {
     this.selectedUser = user;
-    console.log(`Cantidad Maxima: ${this.maxAmount}`);
-    console.log(`Balance del usuario: ${this.selectedUser.balance}`);
-    console.log(`Cantidad Maxima es mayor que el balance del usuario: ${this.maxAmount > this.selectedUser.balance}`);
+
     
     if(this.selectedUser){
       if(Math.abs(Number(this.selectedUser.balance)) < Math.abs(Number(this.totalOwed))){        
@@ -79,11 +76,7 @@ export class RegisterPaymentModalComponent implements OnInit {
         this.maxAmount = Math.abs(Number(this.totalOwed));
       }
     }
-    console.log(this.totalOwed);
-    
-    console.log(this.selectedUser);
-    console.log(`Cantidad Maxima: ${this.maxAmount}`);
-    console.log(`Balance del usuario: ${this.selectedUser.balance}`);
+
   }
 
   onAmountChange(event: Event): void {

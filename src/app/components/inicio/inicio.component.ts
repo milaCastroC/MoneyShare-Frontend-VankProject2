@@ -99,12 +99,10 @@ export class InicioComponent implements OnInit {
   }
 
   createNewShareAccount(): void {
-    console.log('Crear nuevo ShareAccount');
     this.router.navigate(['/create-shareexpense']);
   }
 
   viewShareExpense(id: number): void {
-    console.log('Ver detalle del ShareExpense con ID:', id);
     this.router.navigate(['/share-expense', id]);
   }
 
@@ -119,7 +117,6 @@ export class InicioComponent implements OnInit {
   }
 
   logout(): void {
-    console.log('Cerrar sesión');
     this.router.navigate(['/home']);
   }
 

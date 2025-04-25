@@ -44,7 +44,6 @@ export class LoginComponent implements OnInit {
 
     this.usuarioService.loginUsuario(credentials)
       .then((response: any) => {
-        console.log('Login exitoso:', response);
 
         // Guardar token si se recibe uno
         if (response.data.token) {

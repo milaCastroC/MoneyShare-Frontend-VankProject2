@@ -48,7 +48,6 @@ export class JoinShareModalComponent {
       const idShare = response.data.id_share;
       
       this.closeModal();
-      console.log(response.data.share_id);
       
       //this.reloadCurrentRoute();
       this.router.navigate(['/share-expense', idShare]);
