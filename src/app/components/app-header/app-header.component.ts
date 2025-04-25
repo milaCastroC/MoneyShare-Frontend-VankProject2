@@ -20,4 +20,12 @@ export class AppHeaderComponent {
     localStorage.removeItem('token');
     this.router.navigate(['/']);
   }
+
+  goToHome(): void {
+    if(localStorage.getItem('token')){
+      this.router.navigate(['/inicio']);
+    }else{
+      this.router.navigate(['/']);
+    }
+  }
 }
