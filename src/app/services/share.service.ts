@@ -17,6 +17,14 @@ export class ShareService {
     return this.api.post('/share/create', shareData)
   }
 
+  updateShare(shareData: any) {
+    return this.api.patch('/share/update', shareData);
+  }
+
+  modifyPercentages(idShare: number, percentages: any) {
+    return this.api.patch(`/share/members/percentages/${idShare}`, percentages);
+  }
+
   joinShare(code: any) {
     return this.api.post('/share/members/add', code);
   }

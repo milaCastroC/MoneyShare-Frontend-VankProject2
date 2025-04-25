@@ -12,22 +12,22 @@
       <h2 class="form-title">Editar ShareExpense</h2>
       
       <div class="form-group">
-        <label for="expenseName">Nombre:</label>
+        <label for="shareName">Nombre:</label>
         <input 
           type="text" 
-          id="expenseName" 
+          id="shareName" 
           class="form-control" 
-          [(ngModel)]="expenseName" 
+          [(ngModel)]="shareName" 
           placeholder="Ingresa el nombre del ShareExpense"
         >
       </div>
       
       <div class="form-group">
-        <label for="expenseDescription">Descripción (opcional)</label>
+        <label for="shareDescription">Descripción (opcional)</label>
         <textarea 
-          id="expenseDescription" 
+          id="shareDescription" 
           class="form-control textarea" 
-          [(ngModel)]="expenseDescription" 
+          [(ngModel)]="shareDescription" 
           placeholder="Ingresa una descripción para el ShareExpense"
           rows="4"
         ></textarea>
@@ -42,7 +42,7 @@
               <div class="participant-avatar">
                 <span class="avatar-icon">👤</span>
               </div>
-              <span class="participant-name">{{ participant.name }}</span>
+              <span class="participant-name">{{ participant.username }}</span>
             </div>
             
             <div class="participant-percentage">
@@ -51,7 +51,7 @@
                 <span class="percentage-badge" (click)="startEditingPercentage(participant)">
                   {{ formatPercentage(participant.percentage) }}
                 </span>
-                <span class="amount-badge">{{ formatCurrency(participant.amount) }}</span>
+                <span class="amount-badge">{{ formatCurrency(participant.amount_to_pay) }}</span>
               </div>
               
               <!-- Modo de edición -->
