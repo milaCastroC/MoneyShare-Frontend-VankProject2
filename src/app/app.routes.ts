@@ -9,6 +9,7 @@ import { CreateShareExpenseComponent } from './components/create-share-expense/c
 import { ShareExpenseDetailComponent } from './components/share-expense-detail/share-expense-detail.component';
 import { CreateExpenseComponent } from './components/create-expense/create-expense.component';
 import { EditShareExpenseComponent } from './components/edit-share/edit-share.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },//Ruta principal
@@ -19,6 +20,7 @@ export const routes: Routes = [
     { path: 'share-expense/:id', component: ShareExpenseDetailComponent }, // Ruta Detalle Gasto Compartido
     { path: 'create-expense/:id', component: CreateExpenseComponent }, // Ruta Crear Gasto
     { path: 'edit-share-expense/:id', component: EditShareExpenseComponent }, // Ruta Editar Gasto Compartido
+    { path: '**', component: NotFoundComponent } // Ruta 404 - debe ser la última ruta
 ];
 
 // @NgModule({

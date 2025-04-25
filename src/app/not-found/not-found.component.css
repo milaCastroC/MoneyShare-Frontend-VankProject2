@@ -1,0 +1,119 @@
+.error-container {
+    text-align: center;
+    max-width: 1000px;
+    padding: 40px 20px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    background-color: white;
+    overflow: hidden;
+}
+
+.mascot-side {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f8f0;
+}
+
+.mascot-image {
+    width: 220px;
+    height: auto;
+    filter: drop-shadow(0 5px 10px rgba(76, 175, 80, 0.2));
+}
+
+.message-side {
+    flex: 2;
+    padding: 40px;
+    text-align: left;
+}
+
+.error-title {
+    font-size: 5rem;
+    font-weight: 900;
+    color: #4CAF50;
+    margin: 0 0 20px 0;
+    line-height: 1;
+}
+
+.error-message {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    color: #555;
+}
+
+.error-description {
+    font-size: 1.1rem;
+    color: #666;
+    margin: 0 0 30px 0;
+    line-height: 1.6;
+}
+
+.back-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.back-button:hover {
+    background-color: #3e8e41;
+}
+
+@media (max-width: 768px) {
+    .error-content {
+        flex-direction: column;
+    }
+
+    .mascot-side {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .message-side {
+        width: 100%;
+        padding: 30px;
+    }
+
+    .error-title {
+        font-size: 4rem;
+        text-align: center;
+    }
+
+    .error-message {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    .error-description {
+        text-align: center;
+    }
+
+    .back-button {
+        margin: 0 auto;
+        display: block;
+        max-width: 200px;
+    }
+}
