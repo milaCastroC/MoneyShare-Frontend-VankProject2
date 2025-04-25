@@ -24,8 +24,8 @@ export class NotificationService {
     return this.api.delete(`/notification/all`);
   }
 
-  createWelcomeNotification(){
-    return this.api.post(`/notification/welcome`);
+  createWelcomeNotification(email: string){
+    return this.api.post(`/notification/welcome`, {email});
   }
   /** 
   // Marcar una notificación como leída

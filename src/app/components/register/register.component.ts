@@ -80,7 +80,7 @@ export class RegisterComponent implements OnInit {
     this.usuarioService.registerUsuario(user)
       .then((response: any) => {
         console.log('registro exitoso:', response);
-        //this.notificationService.createWelcomeNotification()
+        this.notificationService.createWelcomeNotification(user.email)
         this.router.navigate(['/login']);
       })
       .catch(error => {

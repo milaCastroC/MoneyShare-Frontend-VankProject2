@@ -27,7 +27,7 @@ export class NotificationsPanelComponent implements OnInit {
     this.loading = true;
     this.notificationService.getAllNotificationByUser()
     .then((res: any) => {
-      this.notifications = res.data;
+      this.notifications = res.data.reverse();
       this.loading = false;
     })
     .catch((err: any) => {
@@ -47,35 +47,11 @@ export class NotificationsPanelComponent implements OnInit {
   markAsRead(notification: Notification): void {
     console.log('Faltan implementar');
     
-    /*
-    if (!notification.read) {
-      this.notificationService.markAsRead(notification.id.toString()).subscribe({
-        next: () => {
-          notification.read = true;
-        },
-        error: (err) => {
-          console.error('Error al marcar como leída:', err);
-        }
-      });
-    }
-    */
   }
   
   markAllAsRead(): void {
     console.log('Faltan implementar');
-    
-    /*
-    this.notificationService.markAllAsRead().subscribe({
-      next: () => {
-        this.notifications.forEach(notification => {
-          notification.read = true;
-        });
-      },
-      error: (err) => {
-        console.error('Error al marcar todas como leídas:', err);
-      }
-    });
-    */
+
   }
   
   deleteNotification(event: Event, notification: Notification): void {
@@ -98,28 +74,7 @@ export class NotificationsPanelComponent implements OnInit {
     });
     
   }
-  /** 
-  getTimeAgo(date: Date): string {
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffSec = Math.round(diffMs / 1000);
-    const diffMin = Math.round(diffSec / 60);
-    const diffHour = Math.round(diffMin / 60);
-    const diffDay = Math.round(diffHour / 24);
-    
-    if (diffSec < 60) {
-      return 'hace unos segundos';
-    } else if (diffMin < 60) {
-      return `hace ${diffMin} ${diffMin === 1 ? 'minuto' : 'minutos'}`;
-    } else if (diffHour < 24) {
-      return `hace ${diffHour} ${diffHour === 1 ? 'hora' : 'horas'}`;
-    } else if (diffDay < 30) {
-      return `hace ${diffDay} ${diffDay === 1 ? 'día' : 'días'}`;
-    } else {
-      return date.toLocaleDateString();
-    }
-  }
-  */
+
   
   getNotificationIcon(type: string): string {
     switch (type) {
