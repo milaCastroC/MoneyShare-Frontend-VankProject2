@@ -85,52 +85,46 @@ export class ShareExpenseDetailComponent implements OnInit {
   }
 
   getShareData(id: string){
-    this.shareService.findShareById(id)
-        .then((res: any) => {
-          this.shareExpenseName = res.data.name;
-          this.shareExpenseCode = res.data.code;
-          this.getUserBalances(parseInt(id));
-          this.totalAmount = res.data.paid_amount;
-          this.calculateProgress();
-          this.showEditButton(res.data.id_creator);
-          this.userBalances.forEach(user => {
-            console.log(user.balance);
-          });
-        })
-        .catch(err => {
-          console.error('Error al obtener el share:', err);
-          if (err.response) {
-            console.error('Status:', err.response.status);
-            console.error('Mensaje del servidor:', err.response.data);
+    // Retraso para asegurar que el backend haya procesado el pago
+    setTimeout(() => {
+      Promise.all([
+        this.shareService.findShareById(id),
+        this.expenseService.getExpensesByShareId(id)
+      ])
+      .then(([shareResponse, expensesResponse]: [any, any]) => {
+        // Procesar datos del share
+        this.shareExpenseName = shareResponse.data.name;
+        this.shareExpenseCode = shareResponse.data.code;
+        this.getUserBalances(parseInt(id));
+        this.totalAmount = shareResponse.data.paid_amount;
+        this.calculateProgress();
+        this.showEditButton(shareResponse.data.id_creator);
+
+        // Procesar datos de los gastos
+        this.subExpenses = expensesResponse.data.map((expense: any) => ({
+          id: expense.id_expense,
+          description: expense.description,
+          category: expense.category,
+          amount: expense.amount,
+          userId: expense.id_user
+        }));
+
+        this.subExpenses.forEach(expense => {
+          if (expense.userId) {
+            this.getUsername(expense);
           }
         });
-
-      this.expenseService.getExpensesByShareId(id)
-        .then((res: any) => {
-          console.log('Respuesta de expenses:', res);
-
-          this.subExpenses = res.data.map((expense: any) => ({
-            id: expense.id_expense,
-            description: expense.description,
-            category: expense.category,
-            amount: expense.amount,
-            userId: expense.id_user
-          }));
-
-          this.subExpenses.forEach(expense => {
-            if (expense.userId) {
-              this.getUsername(expense);
-            }
-          });
-          console.log('SubExpenses procesados:', this.subExpenses);
-
-          console.log('Total Amount:', this.totalAmount);
-        })
-        .catch(err => {
-          console.error('Error al obtener los gastos:', err);
-        });
-        console.log('Holi');
-        
+      })
+      .catch(err => {
+        console.error('Error al obtener los datos:', err);
+        if (err.response) {
+          console.error('Status:', err.response.status);
+          console.error('Mensaje del servidor:', err.response.data);
+        }
+        // Intentar nuevamente después de un error
+        setTimeout(() => this.getShareData(id), 1000);
+      });
+    }, 500);
   }
 
   setOwnBalance(userBalance: ShareMember) {
