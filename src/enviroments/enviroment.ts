@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    apiUrl: 'https://moneyshare-backend-vankproject2-production.up.railway.app/' //'http://localhost:3000/' 
+    apiUrl: 'https://money-share-frontend-vank-project2.vercel.app' //'http://localhost:3000/' 
   };
   
