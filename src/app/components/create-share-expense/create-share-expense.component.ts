@@ -15,6 +15,7 @@ interface ShareExpenseData {
 }
 
 import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 function dateFormatValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value;
@@ -39,7 +40,8 @@ export class CreateShareExpenseComponent implements OnInit{
   constructor(
     private fb: FormBuilder,
     private shareService: ShareService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {
     this.shareExpenseForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -71,6 +73,8 @@ export class CreateShareExpenseComponent implements OnInit{
       this.shareService.createShare(shareExpense)
       .then((response: any) => {
         this.router.navigate(['/inicio']); 
+        this.showSuccess('Share creado con éxito');
+        this.showInfo('Tienes una nueva notificación');
       })
       .catch(error => {
         console.error('Error creando el share:', error);
@@ -93,5 +97,13 @@ export class CreateShareExpenseComponent implements OnInit{
   logout(): void {
     // Implementar lógica de cierre de sesión
     this.router.navigate(['/login']);
+  }
+
+  showInfo(message: string): void {
+    this.toastr.info(message);
+  }
+
+  showSuccess(message: string): void {
+    this.toastr.success(message);
   }
 }

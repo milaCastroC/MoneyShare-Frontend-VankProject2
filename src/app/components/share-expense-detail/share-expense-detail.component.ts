@@ -8,6 +8,7 @@ import { ShareService } from '../../services/share.service';
 import { ExpenseService } from '../../services/expense.service';
 import { UsuarioService } from '../../services/usuario.service';
 import { ShareMember } from '../../models/share-member.model';
+import { ToastrService } from 'ngx-toastr';
 
 interface SubExpense {
   id: number;
@@ -51,7 +52,8 @@ export class ShareExpenseDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private shareService: ShareService,
     private expenseService: ExpenseService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -175,7 +177,7 @@ export class ShareExpenseDetailComponent implements OnInit {
   copyCode(): void {
     navigator.clipboard.writeText(this.shareExpenseCode)
       .then(() => {
-        alert('Código copiado al portapapeles');
+        this.showInfo('Código copiado al portapapeles'); 
       })
       .catch(err => {
         console.error('Error al copiar el código:', err);
@@ -208,8 +210,7 @@ export class ShareExpenseDetailComponent implements OnInit {
   handlePaymentConfirmed(paymentData: { userId: number, amount: number }): void {
     this.closePayDebtModal();
     this.getShareData(this.route.snapshot.paramMap.get('id')!);
-    
-    alert(`Pago de ${this.formatCurrency(paymentData.amount)} realizado con éxito`);
+    this.showInfo('Tienes una nueva notificación');
   }
 
   registerPayment(): void {
@@ -223,9 +224,7 @@ export class ShareExpenseDetailComponent implements OnInit {
   handlePaymentRegistered(paymentData: { userId: number, amount: number }): void {
     this.closeRegisterPaymentModal();
     this.getShareData(this.route.snapshot.paramMap.get('id')!);
-
-    alert(`Pago de ${this.formatCurrency(paymentData.amount)} registrado con éxito`);
-
+    this.showInfo('Tienes una nueva notificación');
   }
 
   goBack(): void {
@@ -276,5 +275,17 @@ export class ShareExpenseDetailComponent implements OnInit {
     if (this.route.snapshot.paramMap.get('id')) {
       this.router.navigate(['/edit-share-expense', this.route.snapshot.paramMap.get('id')]);
     }
+  }
+
+  showError(message: string): void {
+    this.toastr.error(message);
+  }
+
+  showSuccess(message: string): void {
+    this.toastr.success(message);
+  } 
+
+  showInfo(message: string): void {
+    this.toastr.info(message);
   }
 }

@@ -6,6 +6,7 @@ import { UsuarioService } from '../../services/usuario.service';
 import { ActivatedRoute } from '@angular/router';
 import { Payment } from '../../models/payment.model';
 import { ShareService } from '../../services/share.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register-payment-modal',
@@ -28,7 +29,8 @@ export class RegisterPaymentModalComponent implements OnInit {
   constructor(
     private usuarioService: UsuarioService, 
     private shareService: ShareService, 
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -91,14 +93,14 @@ export class RegisterPaymentModalComponent implements OnInit {
 
   confirmPayment(): void {
     if(this.selectedUser === null){
-      alert('Debes seleccionar un usuario');
+      this.showInfo('Debes seleccionar un usuario'); 
       return;
     }
 
     if (this.selectedUser !== null && this.paymentAmount > 0) {
       
       if(this.paymentAmount > this.maxAmount){
-        alert('El monto a pagar no puede ser mayor que la deuda total');
+        this.showError('El monto a pagar no puede ser mayor que la deuda total'); 
         return;
       }
       
@@ -110,11 +112,11 @@ export class RegisterPaymentModalComponent implements OnInit {
       }
       this.shareService.makePayment(payment)
         .then(() => {
-          alert('Pago registrado con éxito');
+          this.showSuccess('Pago registrado con éxito'); 
         })
         .catch((error: any) => {
           console.error('Error al registrar el pago:', error);
-          alert('Ocurrió un error al registrar el pago');
+          this.showError('Ocurrió un error al registrar el pago'); 
         });
         this.paymentRegistered.emit({
           userId: this.loggedUserId,
@@ -125,5 +127,17 @@ export class RegisterPaymentModalComponent implements OnInit {
 
   closeModal(): void {
     this.close.emit();
+  }
+
+  showError(message: string): void {
+    this.toastr.error(message);
+  }
+
+  showSuccess(message: string): void {
+    this.toastr.success(message);
+  }
+
+  showInfo(message: string): void {
+    this.toastr.info(message);
   }
 }

@@ -6,6 +6,7 @@ import { AppHeaderComponent } from "../app-header/app-header.component";
 import { Expense } from '../../models/expense.model';
 import { UsuarioService } from '../../services/usuario.service';
 import { ExpenseService } from '../../services/expense.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-create-expense',
@@ -22,7 +23,8 @@ expenseCategory: any;
   
   constructor(private router: Router, private route: ActivatedRoute,
     private usuarioService: UsuarioService,
-    private expenseService: ExpenseService
+    private expenseService: ExpenseService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -31,12 +33,12 @@ expenseCategory: any;
   
     createShare(): void {
     if (!this.expenseName.trim()) {
-      alert('Por favor, ingresa un nombre para el gasto');
+      this.showError('Por favor, ingresa un nombre para el gasto');
       return;
     }
 
     if (!this.expenseAmount || this.expenseAmount <= 0) {
-      alert('Por favor, ingresa un monto válido para el gasto');
+      this.showError('Por favor, ingresa un monto válido para el gasto');
       return;
     }
 
@@ -61,17 +63,30 @@ expenseCategory: any;
 
         this.expenseService.createExpense(expense)
           .then(() => {
-            alert('Gasto creado con éxito');
+            this.showSuccess('Gasto creado con éxito');
             this.router.navigate(['/share-expense', this.route.snapshot.paramMap.get('id')]); 
+            this.showInfo('Tienes una nueva notificación');
           })
           .catch((error) => {
             console.error('Error al crear el gasto:', error);
-            alert('Ocurrió un error al crear el gasto');
+            this.showError('Ocurrió un error al crear el gasto');
           });
 
       }).catch((error: any) => {
         console.error('Error obteniendo el usuario logueado:', error);
       });
+  }
+
+  showError(message: string): void {
+    this.toastr.error(message);
+  }
+
+  showSuccess(message: string): void {
+    this.toastr.success(message);
+  }
+
+  showInfo(message: string): void {
+    this.toastr.info(message);
   }
   
   goBack(): void {

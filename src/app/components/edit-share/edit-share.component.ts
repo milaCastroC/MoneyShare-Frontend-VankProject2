@@ -6,6 +6,7 @@ import { AppHeaderComponent } from "../app-header/app-header.component";
 import { ShareMember } from '../../models/share-member.model';
 import { ShareService } from '../../services/share.service';
 import { UsuarioService } from '../../services/usuario.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface ShareParticipant extends ShareMember {
   isEditing: boolean;
@@ -32,7 +33,8 @@ export class EditShareExpenseComponent implements OnInit {
     private router: Router,
     private shareService: ShareService,
     private usuarioService: UsuarioService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -136,7 +138,7 @@ export class EditShareExpenseComponent implements OnInit {
     const margin = 0.01;
 
     if (Math.abs(total - 100) > margin) {
-      alert(`La suma de los porcentajes debe ser exactamente 100%. Actualmente suma ${total.toFixed(2)}%`);
+      this.showError(`La suma de los porcentajes debe ser exactamente 100%. Actualmente suma ${total.toFixed(2)}%`);
       return false;
     }
     return true;
@@ -147,7 +149,7 @@ export class EditShareExpenseComponent implements OnInit {
     const newPercentage = parseFloat(newPercentageStr);
 
     if (isNaN(newPercentage) || newPercentage <= 0 || newPercentage > 100) {
-      alert('Por favor, ingresa un porcentaje válido entre 0 y 100');
+      this.showError('Porcentajes no valido. Por favor, ingresa un porcentaje válido entre 0 y 100');
       return;
     }
     participant.percentage = newPercentage;
@@ -196,7 +198,7 @@ export class EditShareExpenseComponent implements OnInit {
 
   saveChanges(): void {
     if (!this.shareName.trim()) {
-      alert('Por favor, ingresa un nombre para el ShareExpense');
+      this.showInfo('Por favor, ingresa un nombre para el ShareExpense');
       return;
     }
 
@@ -206,7 +208,7 @@ export class EditShareExpenseComponent implements OnInit {
       return;
     }
 
-    alert('Cambios guardados con éxito');
+    this.showSuccess('Cambios guardados con éxito');
     this.percentageChange = false;
     if (this.shareExpenseId) {
       this.router.navigate(['/share-expense', this.shareExpenseId]);
@@ -227,5 +229,17 @@ export class EditShareExpenseComponent implements OnInit {
   logout(): void {
     // Implementar lógica de cierre de sesión
     this.router.navigate(['/login']);
+  }
+
+  showError(message: string): void {
+    this.toastr.error(message);
+  }
+
+  showSuccess(message: string): void {
+    this.toastr.success(message);
+  }
+
+  showInfo(message: string): void {
+    this.toastr.info(message);
   }
 }

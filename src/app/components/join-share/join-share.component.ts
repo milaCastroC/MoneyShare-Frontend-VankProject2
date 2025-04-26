@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ShareService } from '../../services/share.service';
 import { Share } from '../../models/share.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-join-share-modal',
@@ -19,7 +20,7 @@ export class JoinShareModalComponent {
   isLoading: boolean = false;
   errorMessage: string | null = null;
   
-  constructor(private router: Router, private shareService: ShareService) { }
+  constructor(private router: Router, private shareService: ShareService, private toastr: ToastrService) { }
   
   closeModal(): void {
     this.close.emit();
@@ -44,7 +45,7 @@ export class JoinShareModalComponent {
 
     this.shareService.joinShare({code: this.shareCode})
     .then((response: any) => {
-      alert('Te has unido al share exitosamente');
+      this.showSuccess('Te has unido al share exitosamente');
       const idShare = response.data.id_share;
       
       this.closeModal();
@@ -60,5 +61,10 @@ export class JoinShareModalComponent {
       this.isLoading = false;
     });
     
+  }
+
+
+  showSuccess(message: string): void {
+    this.toastr.success(message);
   }
 }
